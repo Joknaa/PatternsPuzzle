@@ -2,14 +2,14 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
 
-[CustomEditor(typeof(SplitImage))]
+[CustomEditor(typeof(ImageSplitter))]
 public class LevelGeneratorEditor : Editor {
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
 
-        SplitImage splitImage = (SplitImage)target;
+        ImageSplitter imageSplitter = (ImageSplitter)target;
         // if (GUILayout.Button("Split Image (Sprites)")) splitImage.SplitIntoSprites();
-        if (GUILayout.Button("Split Image")) splitImage.SplitIntoTextures();
-        if (GUILayout.Button("Clear Tiles")) splitImage.ClearTiles();
+        if (GUILayout.Button("Split Image")) imageSplitter.SplitIntoTextures();
+        if (GUILayout.Button("Clear Tiles")) imageSplitter.ClearTiles();
     }
 }
