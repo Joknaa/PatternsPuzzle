@@ -58,33 +58,8 @@ public class CameraController : MonoBehaviour {
 
         return true;
     }
-
-    /*
-    public bool IsFullyVisible(Renderer renderer) {
-        var camera = GetComponent<Camera>();
-        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
-
-        Bounds bounds = renderer.bounds;
-        Vector3 size = bounds.size;
-        Vector3 min = bounds.min;
-
-        //Calculate the 8 points on the corners of the bounding box
-        List<Vector3> boundsCorners = new List<Vector3>(8) {
-            min,
-            min + new Vector3(0, 0, size.z),
-            min + new Vector3(size.x, 0, size.z),
-            min + new Vector3(size.x, 0, 0),
-        };
-        for (int i = 0; i < 4; i++) boundsCorners.Add(boundsCorners[i] + size.y * Vector3.up);
-
-        //Check each plane on every one of the 8 bounds' corners
-        for (int p = 0; p < planes.Length; p++) {
-            foreach (var point in boundsCorners) {
-                var pointIsNotVisible = !planes[p].GetSide(point);
-                if (pointIsNotVisible) return false;
-            }
-        }
-
-        return true;
-    }*/
+    
+    private void OnDestroy() {
+        instance = null;
+    }
 }

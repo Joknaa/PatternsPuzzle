@@ -1,14 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 using OknaaEXTENSIONS;
-using PatternsPuzzle.Scripts.Tile;
+using PuzzleSystem;
+using Unity.VisualScripting;
 
+[RequireComponent(typeof(Puzzle))]
 public class ImageSplitter : MonoBehaviour {
     public static ImageSplitter Instance => instance ??= FindObjectOfType<ImageSplitter>();
     private static ImageSplitter instance;
-    
-    [SerializeField] private SpriteRenderer spritePrefab; 
-    
+
+    private Tile _tilePrefab;
     private Vector2Int _tileCount;
     private Texture2D _inputImage;
     private Puzzle _puzzle;
@@ -21,15 +22,15 @@ public class ImageSplitter : MonoBehaviour {
         _puzzle = puzzle;
         _inputImage = _puzzle._inputImage;
         _tileCount = _puzzle._tileCount;
+        _tilePrefab = _puzzle.tilePrefab;
     }
-    
+
     public void SplitImageIntoTiles() {
         _puzzle = GetComponent<Puzzle>();
         _inputImage = _inputImage.isReadable ? _inputImage : _inputImage.GetReadableCopy();
         SplitImage();
     }
 
-    
 
     private void SplitImage() {
         int tilesCount_Width = _tileCount.x;
@@ -43,8 +44,7 @@ public class ImageSplitter : MonoBehaviour {
 
         for (int i = 0; i < tilesCount_Width; i++) {
             for (int j = 0; j < tilesCount_Height; j++) {
-                var tileGameObject = CreateTile(i, j);
-                _puzzle.tiles.Add(tileGameObject);
+                _puzzle.tiles.Add(CreateTile(i, j));
             }
         }
     }
@@ -52,44 +52,42 @@ public class ImageSplitter : MonoBehaviour {
     private Tile CreateTile(int i, int j) {
         var tileTexture = CopyTilePixelsToNewTexture2D();
         var tileSprite = GetTileSpriteFromTexture();
-        var tileInstance = InstantiateTilePrefab();
-        return ConfigureTileInstance();
+        return InstantiateTilePrefab();
 
         Texture2D CopyTilePixelsToNewTexture2D() {
-            tileTexture = new Texture2D((int)_tileWidth, (int)_tileHeight);
-            tileTexture.SetPixels(_inputImage.GetPixels(i * (int)_tileWidth, j * (int)_tileHeight, (int)_tileWidth, (int)_tileHeight));
+            Vector2Int tileDimensions = new Vector2Int((int)_tileWidth, (int)_tileHeight);
+            tileTexture = new Texture2D(tileDimensions.x, tileDimensions.y);
+            tileTexture.SetPixels(_inputImage.GetPixels(i * tileDimensions.x, j * tileDimensions.y, tileDimensions.x, tileDimensions.y));
             tileTexture.Apply();
             return tileTexture;
         }
 
         Sprite GetTileSpriteFromTexture() {
             var tileRect = new Rect(0, 0, tileTexture.width, tileTexture.height);
-            tileSprite = Sprite.Create(tileTexture, tileRect, Vector2.one * 0.5f);
-            return tileSprite;
+            return Sprite.Create(tileTexture, tileRect, Vector2.one * 0.5f);
         }
 
-        SpriteRenderer InstantiateTilePrefab() {
+        Tile InstantiateTilePrefab() {
+            var tileCenterPosition = CalculateTheCenterPositionOfTheTile();
+
+            var tileInstance = Instantiate(_tilePrefab, tileCenterPosition, Quaternion.identity, transform);
+            tileInstance.Init(_puzzle, i, j, tileSprite);
+            return tileInstance;
+        }
+
+        Vector3 CalculateTheCenterPositionOfTheTile() {
             var tileSize = tileSprite.bounds.size;
             var imageSize = new Vector2(tileSize.x * _tileCount.x, tileSize.y * _tileCount.y);
 
-            var tilePosition_X = (tileSize.x * i) - (imageSize.x * 0.5f) + (tileSize.x * 0.5f);
-            var tilePosition_Y = (tileSize.y * j) - (imageSize.y * 0.5f) + (tileSize.y * 0.5f);
-            var tilePosition = new Vector3(tilePosition_X, tilePosition_Y, 0);
-
-            return Instantiate(spritePrefab, tilePosition, Quaternion.identity, transform);
-        }
-        
-        Tile ConfigureTileInstance() {
-            tileInstance.name = $"Sprite {i} {j}";
-            tileInstance.sprite = tileSprite;
-            tileInstance.sortingOrder = 1;
-            var tileScript = tileInstance.GetComponent<Tile>();
-            tileScript.Init(_puzzle, i * _tileCount.y + j, i, j);
-            return tileScript;
+            var tileCenterPosition = new Vector3(
+                (tileSize.x * i) - (imageSize.x * 0.5f) + (tileSize.x * 0.5f),
+                (tileSize.y * j) - (imageSize.y * 0.5f) + (tileSize.y * 0.5f),
+                0);
+            return tileCenterPosition;
         }
     }
 
-     
-
-    
+    private void OnDestroy() {
+        instance = null;
+    }
 }
