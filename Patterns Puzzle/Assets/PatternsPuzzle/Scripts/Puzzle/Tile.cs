@@ -3,10 +3,11 @@ using GameControllers;
 using OknaaEXTENSIONS;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 namespace PuzzleSystem {
     public class Tile : MonoBehaviour {
-        public SpriteRenderer _spriteRenderer;
+        public Image _spriteRenderer;
 
         public int X;
         public int Y;
@@ -19,6 +20,7 @@ namespace PuzzleSystem {
         private int _numberOfTilesToCombineWith = 0;
 
         private bool _isMatched = false;
+        private RectTransform _rectTransform;
 
         public void Init(Puzzle puzzle, int x, int y, Sprite sprite) {
             _puzzle = puzzle;
@@ -27,9 +29,14 @@ namespace PuzzleSystem {
             _combiningChance = _puzzle.combiningChance;
             _numberOfTilesToCombineWith = _puzzle.numberOfTilesToCombine;
             _spriteRenderer.sprite = sprite;
-            _spriteRenderer.sortingOrder = 1;
+            // _spriteRenderer.sortingOrder = 1;
             gameObject.name = $"Tile {x} {y}";
-
+                
+            _rectTransform = GetComponent<RectTransform>();
+            var oldRect = _rectTransform.rect;
+            var tileSize = sprite.bounds.size;
+            var newRect = new Rect(oldRect.x, oldRect.y, tileSize.x, tileSize.y);
+            _rectTransform.ForceUpdateRectTransforms(); = newRect;
 
         }
 

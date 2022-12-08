@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2710326336868160217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2710326336868160216}
+  - component: {fileID: 2710326336868160220}
+  - component: {fileID: 2710326336868160218}
+  - component: {fileID: 2710326336868160219}
+  m_Layer: 5
+  m_Name: Puzzle_Canvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2710326336868160216
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710326336868160217}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2710326336868160220
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710326336868160217}
+  m_CullTransparentMesh: 1
+--- !u!114 &2710326336868160218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710326336868160217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a094006dda49461694777b97c4a779dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalImagePrefab: {fileID: -1036251553400129178, guid: 2c7a30e9a8952f646ac437b2e78938c8, type: 3}
+  tilePrefab: {fileID: 5846983303436752129, guid: d2daca2517dd48a4c8884547b9bd6322, type: 3}
+  tileGroupPrefab: {fileID: 9045235985538968075, guid: c00192dc8096845409366b473fafa12f, type: 3}
+  _inputImage: {fileID: 2800000, guid: f92b5dcd4fce3b642bd8aeea25e4860d, type: 3}
+  _tileCount: {x: 11, y: 13}
+  combiningChance: 0.875
+  numberOfTilesToCombine: 7
+  tiles: []
+  tileGroups: []
+--- !u!114 &2710326336868160219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710326336868160217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5afe5015392b5364cb061d24ca648f86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
