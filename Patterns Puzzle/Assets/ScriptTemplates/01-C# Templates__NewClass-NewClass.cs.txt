@@ -1,0 +1,9 @@
+using UnityEngine;
+
+public class #SCRIPTNAME# : MonoBehaviour {
+    #NOTRIM#
+    #NOTRIM#
+    #NOTRIM#
+    #NOTRIM#
+    #NOTRIM#
+}
