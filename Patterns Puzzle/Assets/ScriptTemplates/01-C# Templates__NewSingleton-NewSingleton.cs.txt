@@ -1,0 +1,10 @@
+using UnityEngine;
+
+public class #SCRIPTNAME# : MonoBehaviour {
+    public static #SCRIPTNAME# Instance => instance ??= FindObjectOfType<#SCRIPTNAME#>();
+    private static #SCRIPTNAME# instance;
+    #NOTRIM#
+    #NOTRIM#
+
+
+}

@@ -209,7 +209,16 @@ namespace OknaaEXTENSIONS {
         #endregion
         #region ====> Materials Extensions <====
 
-        
+        public static Color SetColor(this Color originalColor, float r = -1, float g = -1, float b = -1, float a = -1) {
+            // if the r,g,b,a values are not set, use the original color values
+            r = Math.Abs(r - (-1)) < 0.01f ? originalColor.r : r;
+            g = Math.Abs(g - (-1)) < 0.01f ? originalColor.g : g;
+            b = Math.Abs(b - (-1)) < 0.01f ? originalColor.b : b;
+            a = Math.Abs(a - (-1)) < 0.01f ? originalColor.a : a;
+            
+            originalColor = new Color(r, g, b, a);
+            return originalColor;
+        }
         
         /// <summary>
         ///  Turns the material's rendering mode into Opaque

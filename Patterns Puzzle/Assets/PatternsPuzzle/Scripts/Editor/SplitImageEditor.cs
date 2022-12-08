@@ -1,15 +1,16 @@
 using UnityEngine;
 using System.Collections.Generic;
+using PatternsPuzzle.Scripts.Tile;
 using UnityEditor;
 
-[CustomEditor(typeof(ImageSplitter))]
-public class LevelGeneratorEditor : Editor {
+[CustomEditor(typeof(Puzzle))]
+public class PuzzleEditor : Editor {
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
 
-        ImageSplitter imageSplitter = (ImageSplitter)target;
+        Puzzle puzzle = (Puzzle)target;
         // if (GUILayout.Button("Split Image (Sprites)")) splitImage.SplitIntoSprites();
-        if (GUILayout.Button("Split Image")) imageSplitter.SplitIntoTextures();
-        if (GUILayout.Button("Clear Tiles")) imageSplitter.ClearTiles();
+        if (GUILayout.Button("Split Image")) puzzle.SplitImageIntoTiles();
+        if (GUILayout.Button("Clear Tiles")) puzzle.ClearTiles();
     }
 }
