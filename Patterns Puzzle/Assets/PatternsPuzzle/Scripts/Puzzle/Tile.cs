@@ -4,92 +4,97 @@ using OknaaEXTENSIONS;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace PatternsPuzzle.Scripts.Tile {
+namespace PuzzleSystem {
     public class Tile : MonoBehaviour {
+        public SpriteRenderer _spriteRenderer;
+
         public int X;
         public int Y;
-        public int ID;
         public bool isTaken;
-        public GameObject tileGroupParent;
+        public TileGroup tileGroupParent;
 
+        private readonly List<Tile> neighbouringTiles = new List<Tile>();
         private Puzzle _puzzle;
         private float _combiningChance;
-        private readonly List<Tile> neighbouringTiles = new List<Tile>();
-        
+        private int _numberOfTilesToCombineWith = 0;
+
         private bool _isMatched = false;
 
-        public void Init(Puzzle puzzle, int id, int x, int y) {
+        public void Init(Puzzle puzzle, int x, int y, Sprite sprite) {
             _puzzle = puzzle;
-            ID = id;
             X = x;
             Y = y;
             _combiningChance = _puzzle.combiningChance;
-            
-        }
+            _numberOfTilesToCombineWith = _puzzle.numberOfTilesToCombine;
+            _spriteRenderer.sprite = sprite;
+            _spriteRenderer.sortingOrder = 1;
+            gameObject.name = $"Tile {x} {y}";
 
+
+        }
 
         public void SetUpNeighbours() {
             if (_puzzle.GetTileByIndex(X, Y + 1, out var tileAbove)) neighbouringTiles.Add(tileAbove);
             if (_puzzle.GetTileByIndex(X, Y - 1, out var tileBelow)) neighbouringTiles.Add(tileBelow);
             if (_puzzle.GetTileByIndex(X - 1, Y, out var tileLeft)) neighbouringTiles.Add(tileLeft);
             if (_puzzle.GetTileByIndex(X + 1, Y, out var tileRight)) neighbouringTiles.Add(tileRight);
-   }
-        
-        
+        }
+
         public void CombineTilesIntoRandomGroups() {
-            if (isTaken) return;
+            if (isTaken) {
+                if (_numberOfTilesToCombineWith <= 0) return;
+                ExpandTileGroup();
+                return;
+            }
             if (CannotCombine()) return;
 
             Tile randomTile;
-            List<Tile> tilesToCombineWith = new List<Tile>(){this};
-            var numberOfTilesToBeCombined = 2;
-            while (numberOfTilesToBeCombined > 0) {
+            List<Tile> tilesToCombineWith = new List<Tile>() { this };
+            while (_numberOfTilesToCombineWith > 0) {
                 if (AllNeighbouringTilesAreTaken) break;
-                
+
                 randomTile = neighbouringTiles.Random();
                 if (randomTile.isTaken) continue;
-                
+
                 tilesToCombineWith.Add(randomTile);
-                numberOfTilesToBeCombined--;
+                _numberOfTilesToCombineWith--;
             }
+
             CreateTileGroup(tilesToCombineWith);
+        }
+
+        private void ExpandTileGroup() {
+            
         }
 
         private bool AllNeighbouringTilesAreTaken => neighbouringTiles.TrueForAll(tile => tile.isTaken);
 
-        private void CreateTileGroup(List<Tile> tiles) {
+        private void CreateTileGroup(List<Tile> tilesToCombine) {
+            var tileGroup = Instantiate(_puzzle.tileGroupPrefab, GetAveragePosition(), Quaternion.identity, _puzzle.transform);
+            tileGroup.Init(tilesToCombine);
             
-            var tileGroup = new GameObject("TileGroup " + Puzzle.TileGroupsCount++) {
-                transform = {
-                    position = GetAveragePosition(),
-                    rotation = Quaternion.identity,
-                    localScale = Vector3.one,
-                    parent = _puzzle.transform
-                }
-            };
-
-            foreach (var tile in tiles) {
-                tile.isTaken = true;
-                tile.SetUpTileGroupParent(tileGroup);
-            }
-
+            foreach (var tile in tilesToCombine) tile.HandleTileGrouping(tileGroup);
+            
             _puzzle.tileGroups.Add(tileGroup);
-            
+
             Vector3 GetAveragePosition() {
                 var averagePosition = Vector3.zero;
-                foreach (var tile in tiles) {
+                foreach (var tile in tilesToCombine) {
                     averagePosition += tile.transform.position;
                 }
-                return averagePosition / tiles.Count;
-            } 
+
+                return averagePosition / tilesToCombine.Count;
+            }
         }
-        
-        
-        private void SetUpTileGroupParent(GameObject tileGroup) {
+
+        private void HandleTileGrouping(TileGroup tileGroup) {
+            isTaken = true;
             tileGroupParent = tileGroup;
             transform.SetParent(tileGroup.transform);
+            _numberOfTilesToCombineWith--;
         }
         
+
         private bool CannotCombine() => !(Random.Range(0f, 1f) < _combiningChance);
     }
 }

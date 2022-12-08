@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1352994189536015587}
   - component: {fileID: 5167502030611393703}
   m_Layer: 0
-  m_Name: SpritePrefab
+  m_Name: TilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,3 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b37b29b410c48e5a80e497e43b1bf34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spriteRenderer: {fileID: 1352994189536015587}
+  X: 0
+  Y: 0
+  isTaken: 0
+  tileGroupParent: {fileID: 0}
