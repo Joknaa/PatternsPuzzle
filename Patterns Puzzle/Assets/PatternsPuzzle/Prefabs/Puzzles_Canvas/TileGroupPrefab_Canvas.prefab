@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9045235985538968074}
   - component: {fileID: 9045235985538968075}
+  - component: {fileID: 294147857942786878}
+  - component: {fileID: -5157985979588184805}
   m_Layer: 5
   m_Name: TileGroupPrefab_Canvas
   m_TagString: Untagged
@@ -27,7 +29,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -36,7 +37,7 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &9045235985538968075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,3 +52,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tiles: []
   maxTiles: 5
+  tilesContainer: {fileID: 0}
+--- !u!114 &294147857942786878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9045235985538968073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
+--- !u!114 &-5157985979588184805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9045235985538968073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd20b14231a470290f4fcf3674d6ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventTrigger: {fileID: 294147857942786878}

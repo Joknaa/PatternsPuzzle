@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace PuzzleSystem {
     public class Tile : MonoBehaviour {
-        public SpriteRenderer _spriteRenderer;
+        public Image _spriteRenderer;
 
         public int X;
         public int Y;
@@ -29,8 +29,15 @@ namespace PuzzleSystem {
             _combiningChance = _puzzle.combiningChance;
             _numberOfTilesToCombineWith = _puzzle.numberOfTilesToCombine;
             _spriteRenderer.sprite = sprite;
-            _spriteRenderer.sortingOrder = 1;
+            // _spriteRenderer.sortingOrder = 1;
             gameObject.name = $"Tile {x} {y}";
+                
+
+            // _rectTransform = GetComponent<RectTransform>();
+            // var oldRect = _rectTransform.rect;
+            // var tileSize = sprite.bounds.size;
+            // var newRect = new Rect(oldRect.x, oldRect.y, tileSize.x, tileSize.y);
+            // _rectTransform.ForceUpdateRectTransforms();
         }
 
         public void SetUpNeighbours() {
@@ -40,13 +47,17 @@ namespace PuzzleSystem {
             if (_puzzle.GetTileByIndex(X + 1, Y, out var tileRight)) neighbouringTiles.Add(tileRight);
         }
 
-        public void CombineTilesIntoRandomGroups() {
+        public void CombineTileWithRandomNeighbors() {
             if (isTaken) {
                 if (_numberOfTilesToCombineWith <= 0) return;
                 ExpandTileGroup();
                 return;
             }
-            if (CannotCombine()) return;
+
+            if (CannotCombine()) {
+                CreateTileGroup(new List<Tile> {this});
+                return;
+            }
 
             Tile randomTile;
             List<Tile> tilesToCombineWith = new List<Tile>() { this };
@@ -70,17 +81,22 @@ namespace PuzzleSystem {
         private bool AllNeighbouringTilesAreTaken => neighbouringTiles.TrueForAll(tile => tile.isTaken);
 
         private void CreateTileGroup(List<Tile> tilesToCombine) {
-            var tileGroup = Instantiate(_puzzle.tileGroupPrefab, GetAveragePosition(), Quaternion.identity, _puzzle.transform);
-            tileGroup.Init(tilesToCombine);
+            var tileGroup = Instantiate(_puzzle.tileGroupPrefab, _puzzle.tilesContainer);
+            // var tileGroup = Instantiate(_puzzle.tileGroupPrefab, GetAveragePosition(), Quaternion.identity, _puzzle.tilesContainer);
+            tileGroup.Init(tilesToCombine, _puzzle);
+            
+            var tileGroupRectTransform = tileGroup.GetComponent<RectTransform>();
+            tileGroupRectTransform.localPosition = GetAveragePosition();
             
             foreach (var tile in tilesToCombine) tile.HandleTileGrouping(tileGroup);
             
+            tileGroup.transform.SetParent(_puzzle.tilesContainer);
             _puzzle.tileGroups.Add(tileGroup);
 
             Vector3 GetAveragePosition() {
                 var averagePosition = Vector3.zero;
                 foreach (var tile in tilesToCombine) {
-                    averagePosition += tile.transform.position;
+                    averagePosition += tile.GetComponent<RectTransform>().localPosition;
                 }
 
                 return averagePosition / tilesToCombine.Count;
