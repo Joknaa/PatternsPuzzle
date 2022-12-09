@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6450315583648728735}
   - component: {fileID: 601735126325322460}
+  - component: {fileID: 8074630787519555958}
+  - component: {fileID: 7318504249999158501}
   m_Layer: 0
   m_Name: TileGroupPrefab_GameObject
   m_TagString: Untagged
@@ -27,7 +29,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.060978, y: 0.030152705, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -46,3 +47,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tiles: []
   maxTiles: 5
+  tilesContainer: {fileID: 0}
+--- !u!114 &8074630787519555958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657803233644456828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
+--- !u!114 &7318504249999158501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657803233644456828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd20b14231a470290f4fcf3674d6ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventTrigger: {fileID: 8074630787519555958}

@@ -10,6 +10,7 @@ namespace PuzzleSystem {
     public class Puzzle : MonoBehaviour {
         public static int TileGroupsCount = 0;
         [Header("Prefabs and Settings: ")] 
+        public Transform tilesContainer;
         public Image originalImagePrefab;
         public Tile tilePrefab;
         public TileGroup tileGroupPrefab;
@@ -23,6 +24,8 @@ namespace PuzzleSystem {
 
         private Image _originalSpriteInstance;
         private bool _isPuzzleGenerated;
+        private GameObject _puzzleContainer;
+        public RectTransform originalImageRectTransform;
 
 
         public void GeneratePuzzle() {
@@ -36,12 +39,21 @@ namespace PuzzleSystem {
             if (CannotSplitImage()) return;
             
             InstantiateOriginalImage();
-            ImageSplitter.Instance.Init(this);
-            ImageSplitter.Instance.SplitImageIntoTiles();
-            // CameraController.Instance.SetCameraTarget(_originalSpriteInstance);
-
+            ImageSplitter.Instance.SplitImageIntoTiles(this);
+            // AdjustTilePositions();
+            
             SetUpTileNeighbours();
             GenerateTileGroups();
+        }
+
+        private void AdjustTilePositions() {
+            var imageSize = _originalSpriteInstance.rectTransform.rect;
+            var tileWidth = imageSize.width / _tileCount.x;
+            var tileHeight = imageSize.height / _tileCount.y;
+            var tileScale = new Vector2(tileWidth, tileHeight);
+            foreach (var tile in tiles) {
+                tile.transform.localScale = tileScale;
+            }
         }
 
         private void SetUpTileNeighbours() {
@@ -49,7 +61,7 @@ namespace PuzzleSystem {
         }
 
         private void GenerateTileGroups() {
-            foreach (var tile in tiles) tile.CombineTilesIntoRandomGroups();
+            foreach (var tile in tiles) tile.CombineTileWithRandomNeighbors();
         }
 
         private void InstantiateOriginalImage() {
@@ -63,6 +75,9 @@ namespace PuzzleSystem {
             var color = _originalSpriteInstance.color;
             color.a = 0.5f;
             _originalSpriteInstance.color = color;
+            originalImageRectTransform = _originalSpriteInstance.rectTransform;
+            originalImageRectTransform.MatchOther(transform.parent.GetComponent<RectTransform>());
+
         }
 
         public Tile GetTileByIndex(int x, int y, out Tile outputTile) {
@@ -137,10 +152,12 @@ namespace PuzzleSystem {
             tiles.Clear();
             tileGroups.Clear();
 
-            var children = gameObject.GetDirectChildren();
+            if (_originalSpriteInstance != null) DestroyImmediate(_originalSpriteInstance.gameObject);
+            var children = tilesContainer.gameObject.GetDirectChildren();
             foreach (var child in children) {
                 DestroyImmediate(child.gameObject);
             }
+            
         }
         
     }

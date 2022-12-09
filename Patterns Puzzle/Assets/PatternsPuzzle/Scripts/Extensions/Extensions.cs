@@ -18,17 +18,19 @@ namespace OknaaEXTENSIONS {
         public static Vector3 SetX(this ref Vector3 v, float x) {
             return new Vector3(x, v.y, v.z);
         }
+
         public static Vector3 SetXY(this ref Vector3 v, float x, float y) {
             v.x = x;
             v.y = y;
             return v;
         }
+
         public static Vector3 SetXZ(this ref Vector3 v, float x, float z) {
             v.x = x;
             v.z = z;
             return v;
         }
-        
+
         /// <summary>
         /// Changes the Y value of a Vector3, while keeping the other values the same.
         /// </summary>
@@ -38,7 +40,7 @@ namespace OknaaEXTENSIONS {
         public static Vector3 SetY(this Vector3 v, float y) {
             return new Vector3(v.x, y, v.z);
         }
-        
+
         /// <summary>
         /// Changes the Z value of a Vector3, while keeping the other values the same.
         /// </summary>
@@ -48,29 +50,34 @@ namespace OknaaEXTENSIONS {
         public static Vector3 SetZ(this Vector3 v, float z) {
             return new Vector3(v.x, v.y, z);
         }
-        
+
         public static Vector3 LerpX(this Vector3 initial, Vector3 final, float t) {
             initial.x = Mathf.Lerp(initial.x, final.x, t);
             return initial;
         }
+
         public static Vector3 LerpY(this Vector3 initial, Vector3 final, float t) {
             initial.y = Mathf.Lerp(initial.y, final.y, t);
             return initial;
         }
+
         public static Vector3 LerpZ(this Vector3 initial, Vector3 final, float t) {
             initial.z = Mathf.Lerp(initial.z, final.z, t);
             return initial;
         }
+
         public static Vector3 LerpXY(this Vector3 initial, Vector3 final, float t) {
             initial.x = Mathf.Lerp(initial.x, final.x, t);
             initial.y = Mathf.Lerp(initial.y, final.y, t);
             return initial;
         }
+
         public static Vector3 LerpXZ(this Vector3 initial, Vector3 final, float t) {
             initial.x = Mathf.Lerp(initial.x, final.x, t);
             initial.z = Mathf.Lerp(initial.z, final.z, t);
             return initial;
         }
+
         public static Vector3 LerpYZ(this Vector3 initial, Vector3 final, float t) {
             initial.y = Mathf.Lerp(initial.y, final.y, t);
             initial.z = Mathf.Lerp(initial.z, final.z, t);
@@ -81,8 +88,25 @@ namespace OknaaEXTENSIONS {
         public static int RandomCoord(this Vector2Int v) => UnityEngine.Random.value < 0.5f ? v.x : v.y;
 
         #endregion
-        
-        
+
+
+        // places rect transform to have the same dimensions as 'other', even if they don't have same parent.
+        // Relatively non-expensive.
+        // NOTICE - also modifies scale of your rectTransf to match the scale of other
+        public static void MatchOther(this RectTransform rt, RectTransform other) {
+            Vector2 myPrevPivot = rt.pivot;
+            myPrevPivot = other.pivot;
+            rt.position = other.position;
+
+            rt.localScale = other.localScale;
+
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, other.rect.width);
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, other.rect.height);
+            //rectTransf.ForceUpdateRectTransforms(); - needed before we adjust pivot a second time?
+            rt.pivot = myPrevPivot;
+        }
+
+
         #region GameObject & Children
 
         public static List<Scene> GetAllLoadedScenes(this SceneManager sceneManager) {
@@ -95,7 +119,7 @@ namespace OknaaEXTENSIONS {
 
             return loadedScenes;
         }
-        
+
         /// <summary>
         /// get all gameobject children recursively
         /// </summary>
@@ -105,8 +129,10 @@ namespace OknaaEXTENSIONS {
                 children.Add(child.gameObject);
                 children.AddRange(child.gameObject.GetALLChildren());
             }
+
             return children;
         }
+
         public static List<GameObject> GetDirectChildren(this GameObject parent) {
             List<GameObject> children = new List<GameObject>();
             foreach (Transform child in parent.transform) {
@@ -115,9 +141,9 @@ namespace OknaaEXTENSIONS {
 
             return children;
         }
-        
 
         #endregion
+
         #region ====> List Extensions <====
 
         /// <summary> 
@@ -146,7 +172,7 @@ namespace OknaaEXTENSIONS {
         public static List<T> ToList<T>(this IEnumerable<T> source) {
             return source != null ? new List<T>(source) : new List<T>();
         }
-        
+
 
         /// <summary>
         /// Fills the list with int values from start to end
@@ -204,9 +230,9 @@ namespace OknaaEXTENSIONS {
             var max = a.CompareTo(b) < 0 ? b : a;
             return number.CompareTo(min) >= 0 && number.CompareTo(max) <= 0;
         }
-        
 
         #endregion
+
         #region ====> Materials Extensions <====
 
         public static Color SetColor(this Color originalColor, float r = -1, float g = -1, float b = -1, float a = -1) {
@@ -215,11 +241,11 @@ namespace OknaaEXTENSIONS {
             g = Math.Abs(g - (-1)) < 0.01f ? originalColor.g : g;
             b = Math.Abs(b - (-1)) < 0.01f ? originalColor.b : b;
             a = Math.Abs(a - (-1)) < 0.01f ? originalColor.a : a;
-            
+
             originalColor = new Color(r, g, b, a);
             return originalColor;
         }
-        
+
         /// <summary>
         ///  Turns the material's rendering mode into Opaque
         /// </summary>
@@ -258,7 +284,7 @@ namespace OknaaEXTENSIONS {
             newColor.a = alpha;
             material.color = newColor;
         }
-        
+
         /// <summary>
         ///  Makes the material transparent, then plays a Fade Out animation.
         /// </summary>
@@ -271,6 +297,7 @@ namespace OknaaEXTENSIONS {
                 material.color = newColor;
                 yield break;
             }
+
             var timeElapsed = 0f;
 
             while (newColor.a > endValue) {
@@ -302,18 +329,15 @@ namespace OknaaEXTENSIONS {
                 material.color = newColor;
                 yield return new WaitForEndOfFrame();
             }
-
-            
         }
-        
+
         /// <summary>
         /// Plays a Fade animation, depending on the "endValue" parameter, the material will either fade in or fade out.
         /// It compares the current alpha value of the material with the "endValue" parameter, if the current alpha is lower than the "endValue" parameter, it will fade in, otherwise it will fade out.
         /// </summary>
-        
         public static IEnumerator FadeTowardsAlpha(this Material material, float endValue, float duration = 1f) {
             material.ToFadeMode();
-            
+
             var isFadeIn = material.color.a < endValue;
             var newColor = material.color;
             var timeElapsed = 0f;
@@ -328,13 +352,12 @@ namespace OknaaEXTENSIONS {
 
             if (isFadeIn && material.color.a >= 1f)
                 material.ToFadeMode();
-          
-
         }
 
         #endregion
+
         #region ====> Texture Extensions <====
-        
+
         /// <summary>
         /// Duplicates the source texture, and returns a readable copy, same as checking the Read/Write box in the editor.
         /// Use this when you have to access a new texture pixels at runtime, and you cant enable the Read/Write access beforehand. 
@@ -350,16 +373,15 @@ namespace OknaaEXTENSIONS {
             Graphics.Blit(source, newRenderTexture);
             RenderTexture previousRenderTexture = RenderTexture.active;
             RenderTexture.active = newRenderTexture;
-        
+
             Texture2D readableTexture = new Texture2D(source.width, source.height);
             readableTexture.ReadPixels(new Rect(0, 0, newRenderTexture.width, newRenderTexture.height), 0, 0);
             readableTexture.Apply();
             RenderTexture.active = previousRenderTexture;
             RenderTexture.ReleaseTemporary(newRenderTexture);
             return readableTexture;
-            
         }
-        
+
         #endregion
     }
 }

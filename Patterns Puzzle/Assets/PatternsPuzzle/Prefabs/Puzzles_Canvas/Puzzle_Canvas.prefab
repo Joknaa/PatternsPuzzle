@@ -29,7 +29,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -59,6 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a094006dda49461694777b97c4a779dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilesContainer: {fileID: 0}
   originalImagePrefab: {fileID: -1036251553400129178, guid: 2c7a30e9a8952f646ac437b2e78938c8, type: 3}
   tilePrefab: {fileID: 5846983303436752129, guid: d2daca2517dd48a4c8884547b9bd6322, type: 3}
   tileGroupPrefab: {fileID: 9045235985538968075, guid: c00192dc8096845409366b473fafa12f, type: 3}
@@ -68,6 +68,7 @@ MonoBehaviour:
   numberOfTilesToCombine: 7
   tiles: []
   tileGroups: []
+  originalImageRectTransform: {fileID: 0}
 --- !u!114 &2710326336868160219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,3 +81,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5afe5015392b5364cb061d24ca648f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isZero: 0

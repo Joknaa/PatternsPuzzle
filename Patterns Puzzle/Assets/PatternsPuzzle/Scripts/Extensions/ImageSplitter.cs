@@ -12,20 +12,23 @@ public class ImageSplitter : MonoBehaviour {
     private Tile _tilePrefab;
     private Vector2Int _tileCount;
     private Texture2D _inputImage;
+    private Transform _tilesContainer;
     private Puzzle _puzzle;
     private float _imageWidth;
     private float _imageHeight;
     private float _tileWidth;
     private float _tileHeight;
 
-    public void Init(Puzzle puzzle) {
+    private void Init(Puzzle puzzle) {
         _puzzle = puzzle;
         _inputImage = _puzzle._inputImage;
         _tileCount = _puzzle._tileCount;
         _tilePrefab = _puzzle.tilePrefab;
+        _tilesContainer = _puzzle.tilesContainer;
     }
 
-    public void SplitImageIntoTiles() {
+    public void SplitImageIntoTiles(Puzzle puzzle) {
+        Init(puzzle);
         _puzzle = GetComponent<Puzzle>();
         _inputImage = _inputImage.isReadable ? _inputImage : _inputImage.GetReadableCopy();
         SplitImage();
@@ -70,23 +73,29 @@ public class ImageSplitter : MonoBehaviour {
         Tile InstantiateTilePrefab() {
             var tileCenterPosition = CalculateTheCenterPositionOfTheTile();
             
-            var tileInstance = Instantiate(_tilePrefab, tileCenterPosition, Quaternion.identity, transform);
+            var tileInstance = Instantiate(_tilePrefab, tileCenterPosition, Quaternion.identity, _tilesContainer);
+            // var tileInstance = Instantiate(_tilePrefab, _puzzle.tilesContainer);
 
             tileInstance.Init(_puzzle, i, j, tileSprite);
             return tileInstance;
         }
 
         Vector3 CalculateTheCenterPositionOfTheTile() {
-            var tileSize = tileSprite.bounds.size;
-            var imageSize = new Vector2(tileSize.x * _tileCount.x, tileSize.y * _tileCount.y);
-
+            var rect = _puzzle.originalImageRectTransform.rect;
+            var imageSize = new Vector2(rect.width, rect.height);
+            
+            var tileSize = new Vector2(imageSize.x / (_tileCount.x * 2), imageSize.y / (_tileCount.y * 2));
+            var imageMinPosition = isZero ? Vector2.zero : new Vector2(rect.xMin, rect.yMin);
+            
             var tileCenterPosition = new Vector3(
-                (tileSize.x * i) - (imageSize.x * 0.5f) + (tileSize.x * 0.5f),
-                (tileSize.y * j) - (imageSize.y * 0.5f) + (tileSize.y * 0.5f),
+                imageMinPosition.x + (tileSize.x * i) -  (tileSize.x * 0.5f),
+                imageMinPosition.y + (tileSize.y * j) -  (tileSize.y * 0.5f),
                 0);
             return tileCenterPosition;
         }
     }
+
+    public bool isZero;
 
     private void OnDestroy() {
         instance = null;
