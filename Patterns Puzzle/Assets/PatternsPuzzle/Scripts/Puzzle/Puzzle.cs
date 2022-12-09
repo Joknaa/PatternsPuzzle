@@ -63,6 +63,8 @@ namespace PuzzleSystem {
             var color = _originalSpriteInstance.color;
             color.a = 0.5f;
             _originalSpriteInstance.color = color;
+            
+            _originalSpriteInstance.GetComponent<RectTransform>().MatchOther(transform.parent.GetComponent<RectTransform>());
         }
 
         public Tile GetTileByIndex(int x, int y, out Tile outputTile) {

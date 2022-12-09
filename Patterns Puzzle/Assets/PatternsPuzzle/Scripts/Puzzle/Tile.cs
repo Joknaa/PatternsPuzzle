@@ -46,6 +46,7 @@ namespace PuzzleSystem {
                 ExpandTileGroup();
                 return;
             }
+
             if (CannotCombine()) return;
 
             Tile randomTile;
@@ -63,18 +64,16 @@ namespace PuzzleSystem {
             CreateTileGroup(tilesToCombineWith);
         }
 
-        private void ExpandTileGroup() {
-            
-        }
+        private void ExpandTileGroup() { }
 
         private bool AllNeighbouringTilesAreTaken => neighbouringTiles.TrueForAll(tile => tile.isTaken);
 
         private void CreateTileGroup(List<Tile> tilesToCombine) {
             var tileGroup = Instantiate(_puzzle.tileGroupPrefab, GetAveragePosition(), Quaternion.identity, _puzzle.transform);
             tileGroup.Init(tilesToCombine);
-            
+
             foreach (var tile in tilesToCombine) tile.HandleTileGrouping(tileGroup);
-            
+
             _puzzle.tileGroups.Add(tileGroup);
 
             Vector3 GetAveragePosition() {
@@ -93,7 +92,10 @@ namespace PuzzleSystem {
             transform.SetParent(tileGroup.transform);
             _numberOfTilesToCombineWith--;
         }
+
+
         
+
 
         private bool CannotCombine() => !(Random.Range(0f, 1f) < _combiningChance);
     }

@@ -83,6 +83,24 @@ namespace OknaaEXTENSIONS {
         #endregion
         
         
+        /// <summary>
+        /// Places rect transform to have the same dimensions as 'other', even if they don't have same parent
+        /// </summary>
+        public static void MatchOther(this RectTransform thisRectTransform, RectTransform other) {
+            Vector2 thisOriginalPivot = thisRectTransform.pivot;
+            thisOriginalPivot = other.pivot;
+            
+            thisRectTransform.position = other.position;
+            thisRectTransform.localScale = other.localScale;
+
+            thisRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, other.rect.width);
+            thisRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, other.rect.height);
+            
+            thisRectTransform.ForceUpdateRectTransforms();
+            thisRectTransform.pivot = thisOriginalPivot;
+        }
+        
+        
         #region GameObject & Children
 
         public static List<Scene> GetAllLoadedScenes(this SceneManager sceneManager) {
@@ -107,6 +125,7 @@ namespace OknaaEXTENSIONS {
             }
             return children;
         }
+        
         public static List<GameObject> GetDirectChildren(this GameObject parent) {
             List<GameObject> children = new List<GameObject>();
             foreach (Transform child in parent.transform) {
