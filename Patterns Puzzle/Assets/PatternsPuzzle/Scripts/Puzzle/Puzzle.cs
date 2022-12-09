@@ -42,6 +42,7 @@ namespace PuzzleSystem {
         public void GeneratePuzzle() {
             if (_isPuzzleGenerated) return;
             _isPuzzleGenerated = true;
+            ClearTiles();
             SplitImageIntoTiles();
         }
         

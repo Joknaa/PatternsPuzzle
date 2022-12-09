@@ -1,6 +1,7 @@
 ﻿using System;
 using GameControllers;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
@@ -10,21 +11,22 @@ namespace PuzzleSystem {
         
         private Vector3 _startPosition;
         private int _startIndex;
-        
-        
+        private Tile _thisTile;
+
+        private void Awake() {
+            _thisTile = GetComponent<Tile>();
+        }
+
         private void Start() {
-            var onPointerDownEvent = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-            var onDragEvent = new EventTrigger.Entry { eventID = EventTriggerType.Drag };
-            var onPointerUpEvent = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
-            
-            eventTrigger.triggers.Add(onPointerDownEvent);
-            eventTrigger.triggers.Add(onDragEvent);
-            eventTrigger.triggers.Add(onPointerUpEvent);
+            SetEventTrigger(EventTriggerType.PointerDown, OnPointerDown);
+            SetEventTrigger(EventTriggerType.Drag, OnDrag);
+            SetEventTrigger(EventTriggerType.PointerUp, OnPointerUp);
+        }
 
-            onPointerDownEvent.callback.AddListener(OnPointerDown);
-            onDragEvent.callback.AddListener(OnDrag);
-            onPointerUpEvent.callback.AddListener(OnPointerUp);
-
+        private void SetEventTrigger(EventTriggerType type, UnityAction<BaseEventData> action) {
+            var entry = new EventTrigger.Entry { eventID = type };
+            entry.callback.AddListener(action);
+            eventTrigger.triggers.Add(entry);
         }
 
         private void OnPointerDown(BaseEventData data) {
@@ -34,12 +36,24 @@ namespace PuzzleSystem {
 
         private void OnDrag(BaseEventData data) => transform.position = ((PointerEventData) data).position;
         private void OnPointerUp(BaseEventData data) {
+            if (TileIsOverItsRightPlace()) {
+                PlaceTileInThePuzzle();
+                return;
+            }
+            
             transform.position = _startPosition;
             transform.SetSiblingIndex(_startIndex);
             var tileContainer = PuzzleController.Instance._currentPuzzle.tilesContainer;
             var child0 = tileContainer.GetChild(0);
             var child1 = tileContainer.GetChild(1);
             child1.transform.SetAsFirstSibling();
+        }
+
+        private void PlaceTileInThePuzzle() {
+        }
+
+        private bool TileIsOverItsRightPlace() {
+            return false;
         }
     }
 }

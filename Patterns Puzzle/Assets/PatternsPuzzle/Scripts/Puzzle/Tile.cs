@@ -81,8 +81,12 @@ namespace PuzzleSystem {
         private bool AllNeighbouringTilesAreTaken => neighbouringTiles.TrueForAll(tile => tile.isTaken);
 
         private void CreateTileGroup(List<Tile> tilesToCombine) {
-            var tileGroup = Instantiate(_puzzle.tileGroupPrefab, GetAveragePosition(), Quaternion.identity, _puzzle.tilesContainer);
+            var tileGroup = Instantiate(_puzzle.tileGroupPrefab, _puzzle.tilesContainer);
+            // var tileGroup = Instantiate(_puzzle.tileGroupPrefab, GetAveragePosition(), Quaternion.identity, _puzzle.tilesContainer);
             tileGroup.Init(tilesToCombine, _puzzle);
+            
+            var tileGroupRectTransform = tileGroup.GetComponent<RectTransform>();
+            tileGroupRectTransform.localPosition = GetAveragePosition();
             
             foreach (var tile in tilesToCombine) tile.HandleTileGrouping(tileGroup);
             
@@ -92,7 +96,7 @@ namespace PuzzleSystem {
             Vector3 GetAveragePosition() {
                 var averagePosition = Vector3.zero;
                 foreach (var tile in tilesToCombine) {
-                    averagePosition += tile.transform.position;
+                    averagePosition += tile.GetComponent<RectTransform>().localPosition;
                 }
 
                 return averagePosition / tilesToCombine.Count;
