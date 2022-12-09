@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6450315583648728735}
   - component: {fileID: 601735126325322460}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TileGroupPrefab_GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}

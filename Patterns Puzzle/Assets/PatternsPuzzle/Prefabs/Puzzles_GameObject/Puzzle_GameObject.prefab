@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2615940518165204830}
   - component: {fileID: 2615940518165204828}
   - component: {fileID: 2615940518165204829}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Puzzle_GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -57,6 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a094006dda49461694777b97c4a779dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  originalImagePrefab: {fileID: 106288157222708147, guid: a9b9436dbb83f4242a1a62195d1a6627, type: 3}
   tilePrefab: {fileID: 5167502030611393703, guid: 2ba9d78d2ac2ff14fbd566b39a93061b, type: 3}
   tileGroupPrefab: {fileID: 601735126325322460, guid: d0fc881b7b3452241823304e4fb2c2bd, type: 3}
   _inputImage: {fileID: 2800000, guid: f92b5dcd4fce3b642bd8aeea25e4860d, type: 3}

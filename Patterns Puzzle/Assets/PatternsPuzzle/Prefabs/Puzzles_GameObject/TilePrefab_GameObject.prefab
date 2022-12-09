@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6450315583648728735}
   - component: {fileID: 1352994189536015587}
   - component: {fileID: 5167502030611393703}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TilePrefab_GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

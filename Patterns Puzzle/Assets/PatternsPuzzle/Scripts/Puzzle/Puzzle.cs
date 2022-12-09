@@ -10,7 +10,7 @@ namespace PuzzleSystem {
     public class Puzzle : MonoBehaviour {
         public static int TileGroupsCount = 0;
         [Header("Prefabs and Settings: ")] 
-        public Image originalImagePrefab;
+        public SpriteRenderer originalImagePrefab;
         public Tile tilePrefab;
         public TileGroup tileGroupPrefab;
         public Texture2D _inputImage;
@@ -21,7 +21,7 @@ namespace PuzzleSystem {
         [Header("Tiles and TileGroups: ")] public List<Tile> tiles;
         public List<TileGroup> tileGroups;
 
-        private Image _originalSpriteInstance;
+        private SpriteRenderer _originalSpriteInstance;
         private bool _isPuzzleGenerated;
 
 
@@ -58,7 +58,7 @@ namespace PuzzleSystem {
             _originalSpriteInstance = Instantiate(originalImagePrefab, transform);
             originalImagePrefab.name = "Original Image";
             _originalSpriteInstance.sprite = imageSprite;
-            // _originalSpriteInstance.sortingOrder = -1;
+            _originalSpriteInstance.sortingOrder = -1;
             _originalSpriteInstance.transform.SetParent(transform);
             var color = _originalSpriteInstance.color;
             color.a = 0.5f;

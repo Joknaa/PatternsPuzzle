@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace PuzzleSystem {
     public class Tile : MonoBehaviour {
-        public Image _spriteRenderer;
+        public SpriteRenderer _spriteRenderer;
 
         public int X;
         public int Y;
@@ -29,15 +29,8 @@ namespace PuzzleSystem {
             _combiningChance = _puzzle.combiningChance;
             _numberOfTilesToCombineWith = _puzzle.numberOfTilesToCombine;
             _spriteRenderer.sprite = sprite;
-            // _spriteRenderer.sortingOrder = 1;
+            _spriteRenderer.sortingOrder = 1;
             gameObject.name = $"Tile {x} {y}";
-                
-            _rectTransform = GetComponent<RectTransform>();
-            var oldRect = _rectTransform.rect;
-            var tileSize = sprite.bounds.size;
-            var newRect = new Rect(oldRect.x, oldRect.y, tileSize.x, tileSize.y);
-            _rectTransform.ForceUpdateRectTransforms(); = newRect;
-
         }
 
         public void SetUpNeighbours() {
