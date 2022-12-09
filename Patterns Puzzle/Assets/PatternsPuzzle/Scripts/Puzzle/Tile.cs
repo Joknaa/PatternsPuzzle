@@ -3,6 +3,7 @@ using GameControllers;
 using OknaaEXTENSIONS;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 namespace PuzzleSystem {
     public class Tile : MonoBehaviour {
@@ -19,6 +20,7 @@ namespace PuzzleSystem {
         private int _numberOfTilesToCombineWith = 0;
 
         private bool _isMatched = false;
+        private RectTransform _rectTransform;
 
         public void Init(Puzzle puzzle, int x, int y, Sprite sprite) {
             _puzzle = puzzle;
@@ -29,8 +31,6 @@ namespace PuzzleSystem {
             _spriteRenderer.sprite = sprite;
             _spriteRenderer.sortingOrder = 1;
             gameObject.name = $"Tile {x} {y}";
-
-
         }
 
         public void SetUpNeighbours() {

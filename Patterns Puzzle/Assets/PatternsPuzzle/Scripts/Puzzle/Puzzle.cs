@@ -4,11 +4,14 @@ using OknaaEXTENSIONS;
 using UnityEditor;
 using UnityEditor.Sprites;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PuzzleSystem {
     public class Puzzle : MonoBehaviour {
         public static int TileGroupsCount = 0;
-        [Header("Prefabs and Settings: ")] public Tile tilePrefab;
+        [Header("Prefabs and Settings: ")] 
+        public SpriteRenderer originalImagePrefab;
+        public Tile tilePrefab;
         public TileGroup tileGroupPrefab;
         public Texture2D _inputImage;
         public Vector2Int _tileCount;
@@ -35,7 +38,7 @@ namespace PuzzleSystem {
             InstantiateOriginalImage();
             ImageSplitter.Instance.Init(this);
             ImageSplitter.Instance.SplitImageIntoTiles();
-            CameraController.Instance.SetCameraTarget(_originalSpriteInstance);
+            // CameraController.Instance.SetCameraTarget(_originalSpriteInstance);
 
             SetUpTileNeighbours();
             GenerateTileGroups();
@@ -52,13 +55,14 @@ namespace PuzzleSystem {
         private void InstantiateOriginalImage() {
             var imageRect = new Rect(0, 0, _inputImage.width, _inputImage.height);
             var imageSprite = Sprite.Create(_inputImage, imageRect, Vector2.one * 0.5f);
-            _originalSpriteInstance = new GameObject("Original Sprite").AddComponent<SpriteRenderer>();
+            _originalSpriteInstance = Instantiate(originalImagePrefab, transform);
+            originalImagePrefab.name = "Original Image";
             _originalSpriteInstance.sprite = imageSprite;
+            _originalSpriteInstance.sortingOrder = -1;
+            _originalSpriteInstance.transform.SetParent(transform);
             var color = _originalSpriteInstance.color;
             color.a = 0.5f;
             _originalSpriteInstance.color = color;
-            _originalSpriteInstance.sortingOrder = -1;
-            _originalSpriteInstance.transform.parent = transform;
         }
 
         public Tile GetTileByIndex(int x, int y, out Tile outputTile) {

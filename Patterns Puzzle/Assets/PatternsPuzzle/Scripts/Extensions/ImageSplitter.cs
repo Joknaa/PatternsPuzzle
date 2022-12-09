@@ -69,8 +69,9 @@ public class ImageSplitter : MonoBehaviour {
 
         Tile InstantiateTilePrefab() {
             var tileCenterPosition = CalculateTheCenterPositionOfTheTile();
-
+            
             var tileInstance = Instantiate(_tilePrefab, tileCenterPosition, Quaternion.identity, transform);
+
             tileInstance.Init(_puzzle, i, j, tileSprite);
             return tileInstance;
         }
