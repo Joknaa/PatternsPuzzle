@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2710326336868160216}
   - component: {fileID: 2710326336868160220}
   - component: {fileID: 2710326336868160218}
-  - component: {fileID: 2710326336868160219}
   m_Layer: 5
   m_Name: Puzzle_Canvas
   m_TagString: Untagged
@@ -59,26 +58,109 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilesContainer: {fileID: 0}
+  tileShadowsContainer: {fileID: 2710326336868160216}
+  _inputImage: {fileID: 2800000, guid: b24c6563116b7cb4bb23d308309055fe, type: 3}
   originalImagePrefab: {fileID: -1036251553400129178, guid: 2c7a30e9a8952f646ac437b2e78938c8, type: 3}
+  originalShadowImagePrefab: {fileID: -1036251553400129178, guid: 116e966b61685824b976590144aff24f, type: 3}
   tilePrefab: {fileID: 5846983303436752129, guid: d2daca2517dd48a4c8884547b9bd6322, type: 3}
   tileGroupPrefab: {fileID: 9045235985538968075, guid: c00192dc8096845409366b473fafa12f, type: 3}
-  _inputImage: {fileID: 2800000, guid: f92b5dcd4fce3b642bd8aeea25e4860d, type: 3}
-  _tileCount: {x: 11, y: 13}
-  combiningChance: 0.875
-  numberOfTilesToCombine: 7
-  tiles: []
-  tileGroups: []
-  originalImageRectTransform: {fileID: 0}
---- !u!114 &2710326336868160219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2710326336868160217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5afe5015392b5364cb061d24ca648f86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isZero: 0
+  tileShadowPrefab: {fileID: 5846983303436752134, guid: f3c3381d67dbf284180cf1c5012a95e6, type: 3}
+  _tileCount: {x: 6, y: 6}
+  combiningChance: 1
+  numberOfTilesToCombine: 9
+  tiles:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  tileShadows:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  tileGroups:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

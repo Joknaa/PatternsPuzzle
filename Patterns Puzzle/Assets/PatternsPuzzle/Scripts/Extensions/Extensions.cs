@@ -89,6 +89,7 @@ namespace OknaaEXTENSIONS {
 
         #endregion
 
+        
 
         // places rect transform to have the same dimensions as 'other', even if they don't have same parent.
         // Relatively non-expensive.
@@ -352,34 +353,6 @@ namespace OknaaEXTENSIONS {
 
             if (isFadeIn && material.color.a >= 1f)
                 material.ToFadeMode();
-        }
-
-        #endregion
-
-        #region ====> Texture Extensions <====
-
-        /// <summary>
-        /// Duplicates the source texture, and returns a readable copy, same as checking the Read/Write box in the editor.
-        /// Use this when you have to access a new texture pixels at runtime, and you cant enable the Read/Write access beforehand. 
-        /// </summary>
-        public static Texture2D GetReadableCopy(this Texture2D source) {
-            RenderTexture newRenderTexture = RenderTexture.GetTemporary(
-                source.width,
-                source.height,
-                0,
-                RenderTextureFormat.Default,
-                RenderTextureReadWrite.Linear);
-
-            Graphics.Blit(source, newRenderTexture);
-            RenderTexture previousRenderTexture = RenderTexture.active;
-            RenderTexture.active = newRenderTexture;
-
-            Texture2D readableTexture = new Texture2D(source.width, source.height);
-            readableTexture.ReadPixels(new Rect(0, 0, newRenderTexture.width, newRenderTexture.height), 0, 0);
-            readableTexture.Apply();
-            RenderTexture.active = previousRenderTexture;
-            RenderTexture.ReleaseTemporary(newRenderTexture);
-            return readableTexture;
         }
 
         #endregion

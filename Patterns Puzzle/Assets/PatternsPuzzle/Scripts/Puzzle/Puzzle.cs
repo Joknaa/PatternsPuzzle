@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using OknaaEXTENSIONS;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Sprites;
 using UnityEngine;
@@ -14,12 +15,13 @@ namespace PuzzleSystem {
         public Transform tileShadowsContainer;
 
         [Header("Prefabs: ")] 
-        public Transform tileShadowPrefab;
+        public Texture2D _inputImage;
         public Image originalImagePrefab;
+        public Image originalShadowImagePrefab;
         public Tile tilePrefab;
         public TileGroup tileGroupPrefab;
-        public Texture2D _inputImage;
-        
+        public Transform tileShadowPrefab;
+
         [Header("Settings: ")]
         public Vector2Int _tileCount;
         [Range(0.0f, 1.0f)] [SerializeField] public float combiningChance;
@@ -27,7 +29,7 @@ namespace PuzzleSystem {
 
         [Header("Output Lists: ")] 
         public List<Tile> tiles;
-        public List<Transform> tileShadows;
+        public List<TileShadow> tileShadows;
         public List<TileGroup> tileGroups;
 
         public Image OriginalImageInstance => _originalImageInstance;
@@ -39,35 +41,37 @@ namespace PuzzleSystem {
         private RectTransform originalImageRectTransform;
 
 
-        public void GeneratePuzzle() {
+        public void GenerateNewPuzzle() {
             if (_isPuzzleGenerated) return;
             _isPuzzleGenerated = true;
             ClearTiles();
-            SplitImageIntoTiles();
+            StartPuzzleGeneration();
         }
         
         
-        private void SplitImageIntoTiles() {
+        private void StartPuzzleGeneration() {
             if (CannotSplitImage()) return;
 
             InstantiateOriginalImage();
-            ImageSplitter.Instance.SplitImageIntoTiles(this);
-            // AdjustTilePositions();
-            
+            GeneratePuzzle();
             SetUpTileNeighbours();
+
             GenerateTileGroups();
         }
+        
+        private void InstantiateOriginalImage() {
+            var imageSprite = Sprite.Create(_inputImage, _inputImage.Rect(), Vector2.one * 0.5f);
+            _originalImageInstance = Instantiate(originalImagePrefab, transform);
+            _originalImageInstance.name = "Original Image";
+            _originalImageInstance.sprite = imageSprite;
 
-        private void AdjustTilePositions() {
-            var imageSize = _originalImageInstance.rectTransform.rect;
-            var tileWidth = imageSize.width / _tileCount.x;
-            var tileHeight = imageSize.height / _tileCount.y;
-            var tileScale = new Vector2(tileWidth, tileHeight);
-            foreach (var tile in tiles) {
-                tile.transform.localScale = tileScale;
-            }
+            var color = _originalImageInstance.color;
+            color.a = 0.5f;
+            _originalImageInstance.color = color;
+            originalImageRectTransform = _originalImageInstance.rectTransform;
+            originalImageRectTransform.MatchOther(transform.parent.GetComponent<RectTransform>());
         }
-
+        
         private void SetUpTileNeighbours() {
             foreach (var tile in tiles) tile.SetUpNeighbours();
         }
@@ -75,22 +79,11 @@ namespace PuzzleSystem {
         private void GenerateTileGroups() {
             foreach (var tile in tiles) tile.CombineTileWithRandomNeighbors();
         }
-
-        private void InstantiateOriginalImage() {
-            var imageRect = new Rect(0, 0, _inputImage.width, _inputImage.height);
-            var imageSprite = Sprite.Create(_inputImage, imageRect, Vector2.one * 0.5f);
-            _originalImageInstance = Instantiate(originalImagePrefab, transform);
-            originalImagePrefab.name = "Original Image";
-            _originalImageInstance.sprite = imageSprite;
-            // _originalSpriteInstance.sortingOrder = -1;
-            _originalImageInstance.transform.SetParent(transform);
-            var color = _originalImageInstance.color;
-            color.a = 0.5f;
-            _originalImageInstance.color = color;
-            originalImageRectTransform = _originalImageInstance.rectTransform;
-            originalImageRectTransform.MatchOther(transform.parent.GetComponent<RectTransform>());
-
+        
+        private void GeneratePuzzle() {
+            PuzzleGenerator.Instance.GeneratePuzzle(this);
         }
+
 
         public Tile GetTileByIndex(int x, int y, out Tile outputTile) {
             int index = TileCoordinates2Index(x, y);
@@ -106,7 +99,9 @@ namespace PuzzleSystem {
             bool TileCoordinatesAreOutsideGrid() => x < 0 || x >= _tileCount.x || y < 0 || y >= _tileCount.y;
         }
 
-        private int TileCoordinates2Index(int x, int y) => x * _tileCount.y + y;
+        public int TileCoordinates2Index(int x, int y) => x * _tileCount.y + y;
+        public int TileCoordinates2Index(Vector2Int coordinates) => coordinates.x * _tileCount.y + coordinates.y;
+        public Vector2Int TileIndex2Coordinates(int index) => new Vector2Int(index / _tileCount.y, index % _tileCount.y);
 
         private bool CannotSplitImage() {
             if (_inputImage == null) {
@@ -147,7 +142,7 @@ namespace PuzzleSystem {
         private void SaveTileSprites(string PuzzleDirectory) {
             foreach (var tile in tiles) {
                 var tileSpritePath = PuzzleDirectory + "/Sprites/" + tile.name + ".png";
-                File.WriteAllBytes(tileSpritePath, tile._spriteRenderer.sprite.texture.EncodeToJPG());
+                File.WriteAllBytes(tileSpritePath, tile.spriteRenderer.sprite.texture.EncodeToJPG());
                 //tile._spriteRenderer.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(tileSpritePath);
 
                 PrefabUtility.SaveAsPrefabAsset(tile.gameObject, PuzzleDirectory + "/Tiles/" + tile.name + ".prefab", out var tileSuccess);
@@ -175,6 +170,7 @@ namespace PuzzleSystem {
                 DestroyImmediate(child.gameObject);
             }
             
+            PuzzleGenerator.Instance.Clear();
         }
         
     }

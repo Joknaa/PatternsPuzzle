@@ -13,7 +13,7 @@ namespace GameControllers {
 
         private void Start() {
             GetCurrentPuzzle();
-            _currentPuzzle.GeneratePuzzle();
+            _currentPuzzle.GenerateNewPuzzle();
         }
 
         private void GetCurrentPuzzle() {
