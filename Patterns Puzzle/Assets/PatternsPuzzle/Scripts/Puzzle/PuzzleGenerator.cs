@@ -58,7 +58,6 @@ namespace PuzzleSystem {
             var parentRect = parentInCanvas.GetComponent<RectTransform>().rect;
             var parentDimensions = new Vector2(parentRect.width, parentRect.height);
             var tileDimensions = new Vector2(parentDimensions.x / tileCount.x, parentDimensions.y / tileCount.y);
-            Debug.Log("tileDimensions: " + tileDimensions);
             
             var tileRectTransform = tile.GetComponent<RectTransform>();
             tileRectTransform.localScale = Vector3.one; 

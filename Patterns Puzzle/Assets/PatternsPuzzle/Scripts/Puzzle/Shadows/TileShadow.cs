@@ -10,20 +10,28 @@ namespace PuzzleSystem {
         [SerializeField] private EventTrigger eventTrigger;
 
         private Tile _tile;
-        private Image _highlightImage;
+        private CanvasGroup _canvasGroup;
         private Vector3 _startPosition;
         private int _startIndex;
         private int _id;
         private Puzzle _puzzle;
 
         private void Awake() {
-            _highlightImage = GetComponent<Image>();
+            _canvasGroup = GetComponent<CanvasGroup>();
             ActivateHighlight(false);
         }
 
         private void Start() {
-            SetEventTrigger(EventTriggerType.PointerEnter, OnPointerEnter);
-            SetEventTrigger(EventTriggerType.PointerExit, OnPointerExit);
+            // SetEventTrigger(EventTriggerType.PointerEnter, OnPointerEnter);
+            // SetEventTrigger(EventTriggerType.PointerExit, OnPointerExit);
+            
+            var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            entry.callback.AddListener(OnPointerEnter);
+            eventTrigger.triggers.Add(entry);
+            
+            var entry2 = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+            entry2.callback.AddListener(OnPointerExit);
+            eventTrigger.triggers.Add(entry);
         }
         
         public void Init(Puzzle puzzle, Vector2Int coordinates, Tile tile) {
@@ -60,8 +68,9 @@ namespace PuzzleSystem {
             child1.transform.SetAsFirstSibling();
         }
         
-        private void ActivateHighlight(bool active) => _highlightImage.enabled = active;
-
-       
+        public void ActivateHighlight(bool active) {
+            _canvasGroup.alpha = active ? 1f : 0;
+            print("ActivateHighlight " + active);
+        }
     }
 }

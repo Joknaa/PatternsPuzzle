@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,10 +6,13 @@ public class CameraController : MonoBehaviour {
     public static CameraController Instance => instance ??= FindObjectOfType<CameraController>();
     private static CameraController instance;
 
-    private Camera _camera;
+    public Camera Camera;
     private SpriteRenderer _target;
     private List<Vector3> _targetBounds;
 
+    private void Start() {
+        Camera = Camera.main;
+    }
 
     public void SetCameraTarget(Component target) {
         _target = target as SpriteRenderer;
@@ -20,14 +24,14 @@ public class CameraController : MonoBehaviour {
     }
 
     private void AdjustCameraSize() {
-        if (_camera == null) _camera = GetComponent<Camera>();
+        if (Camera == null) Camera = GetComponent<Camera>();
 
         CalculateTargetBounds();
         
         var targetStillNotFullyVisible = !TargetIsFullyVisible();
         while (targetStillNotFullyVisible) {
             targetStillNotFullyVisible = !TargetIsFullyVisible();
-            _camera.orthographicSize += 1f;
+            Camera.orthographicSize += 1f;
         }
         
     }
@@ -47,7 +51,7 @@ public class CameraController : MonoBehaviour {
     }
 
     private bool TargetIsFullyVisible() {
-        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(_camera);
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(Camera);
 
         for (int p = 0; p < planes.Length; p++) {
             foreach (var point in _targetBounds) {

@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - MainCanvas
+  - Tile
+  - TileShadow
+  - TileGroup
   layers:
   - Default
   - TransparentFX
@@ -13,7 +16,7 @@ TagManager:
   - Water
   - UI
   - Puzzle
-  - 
+  - Drag'n'Drop
   - 
   - 
   - 
