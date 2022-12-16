@@ -35,8 +35,8 @@ namespace PuzzleSystem {
 
             Tile InstantiateTilePrefab(int index) {
                 coordinates = _puzzle.TileIndex2Coordinates(index);
-                var tileInstance = Object.Instantiate(_tilePrefab, _tilesContainer);
-                SetTileDimensionsRelativeToParentInCanvas(tileInstance, _tilesContainer, coordinates, _tileCount);
+                var tileInstance = Object.Instantiate(_tilePrefab, _puzzle.transform);
+                SetTileDimensionsRelativeToParentInCanvas(tileInstance, _puzzle.transform, coordinates, _tileCount);
                 tileInstance.Init(_puzzle, coordinates, sprites[index]);
                 return tileInstance;
             }
@@ -51,20 +51,21 @@ namespace PuzzleSystem {
             _isInit = true;
         }
         
-        public static void SetTileDimensionsRelativeToParentInCanvas(Object tile, Object parentInCanvas, Vector2Int tileCoordinates, Vector2Int tileCount) {
+        public void SetTileDimensionsRelativeToParentInCanvas(Object tile, Object parentInCanvas, Vector2Int tileCoordinates, Vector2Int tileCount) {
             var i = tileCoordinates.x;
             var j = tileCoordinates.y;
             
             var parentRect = parentInCanvas.GetComponent<RectTransform>().rect;
             var parentDimensions = new Vector2(parentRect.width, parentRect.height);
             var tileDimensions = new Vector2(parentDimensions.x / tileCount.x, parentDimensions.y / tileCount.y);
+            _puzzle.TileDimensions = tileDimensions;
             
             var tileRectTransform = tile.GetComponent<RectTransform>();
             tileRectTransform.localScale = Vector3.one; 
             tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tileDimensions.x);
             tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tileDimensions.y);
-            tileRectTransform.localPosition = new Vector3(i * tileDimensions.x, j * tileDimensions.y, 0);
-
+            tileRectTransform.localPosition = new Vector3((i + 0.5f) * tileDimensions.x, (j + 0.5f) * tileDimensions.y, 0);
         }
+       
     }
 }

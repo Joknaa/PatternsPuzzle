@@ -11,7 +11,13 @@ namespace PuzzleSystem {
             tiles = groupedTiles;
             _puzzle = puzzle;
             name = "TileGroup " + (tiles.Count);
-            transform.SetParent(_puzzle.tilesContainer);
+            ResizeTilesToOriginalSize();
+        }
+        
+        private void ResizeTilesToOriginalSize() {
+            foreach (var tile in tiles) {
+                tile.ResizeToOriginalSize();
+            }
         }
     }
 }

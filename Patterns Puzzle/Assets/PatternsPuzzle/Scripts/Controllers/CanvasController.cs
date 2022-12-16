@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OknaaEXTENSIONS;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,17 +32,13 @@ namespace GameControllers {
             
             m_PointerEventData = new PointerEventData(m_EventSystem) { position = position };
             m_Raycaster.Raycast(m_PointerEventData, results);
-
-            foreach (RaycastResult result in results) {
-                if (result.gameObject.layer == LayerMask.NameToLayer(DragNDropLayer)) {
-                    Debug.Log("Raycast hit " + result.gameObject.name);
-                }
-            }
-
             return results;
         }
-        
-        
+
+        public void UpdateContentSpacing() {
+            HorizontalLayoutGroup.spacing = PuzzleController.Instance.CurrentPuzzle.TileDimensions.x * 1.5f;
+        }
+
         private Canvas GetCanvas() {
             if (_canvas != null) return _canvas;
             _canvas = GetComponent<Canvas>();

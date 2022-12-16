@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using GameControllers;
 using OknaaEXTENSIONS;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -29,14 +30,18 @@ namespace PuzzleSystem {
         public List<Tile> tiles;
         public List<TileShadow> tileShadows;
         public List<TileGroup> tileGroups;
-
+        
+        public Vector2 TileDimensions;
+        
         public Image OriginalImageInstance => _originalImageInstance;
         private Image _originalImageInstance;
-        private bool _isPuzzleGenerated;
-        private GameObject _puzzleContainer;
-
+        
         public RectTransform OriginalImageRectTransform => originalImageRectTransform;
         private RectTransform originalImageRectTransform;
+
+        
+        private bool _isPuzzleGenerated;
+        private GameObject _puzzleContainer;
 
 
         public void GenerateNewPuzzle() {
@@ -55,6 +60,7 @@ namespace PuzzleSystem {
             SetUpTileNeighbours();
 
             GenerateTileGroups();
+            CanvasController.Instance.UpdateContentSpacing();
         }
         
         private void InstantiateOriginalImage() {
