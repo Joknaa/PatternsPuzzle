@@ -32,6 +32,7 @@ namespace GameControllers {
             
             m_PointerEventData = new PointerEventData(m_EventSystem) { position = position };
             m_Raycaster.Raycast(m_PointerEventData, results);
+            print("results: " + results.Count);
             return results;
         }
 

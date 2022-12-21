@@ -8,9 +8,12 @@ namespace PuzzleSystem {
         private int _startIndex;
         private int _id;
         private Puzzle _puzzle;
+        public RectTransform RectTransform => _rectTransform;
+        private RectTransform _rectTransform;
 
         private void Awake() {
             _canvasGroup = GetComponent<CanvasGroup>();
+            _rectTransform = GetComponent<RectTransform>();
             ActivateHighlight(false);
         }
 

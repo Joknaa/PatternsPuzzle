@@ -159,8 +159,6 @@ GameObject:
   - component: {fileID: 5846983303436752129}
   - component: {fileID: -2957458900732210399}
   - component: {fileID: -2030007404502679305}
-  - component: {fileID: 8266798549622382230}
-  - component: {fileID: -6913189649966870243}
   m_Layer: 7
   m_Name: TilePrefab_Canvas
   m_TagString: Tile
@@ -244,29 +242,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8266798549622382230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5846983303436752135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cd20b14231a470290f4fcf3674d6ff9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventTrigger: {fileID: -6913189649966870243}
---- !u!114 &-6913189649966870243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5846983303436752135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates: []
