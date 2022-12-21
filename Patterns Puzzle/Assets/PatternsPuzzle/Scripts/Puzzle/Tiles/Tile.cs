@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GameControllers;
 using OknaaEXTENSIONS;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace PuzzleSystem {
     public class Tile : MonoBehaviour {
@@ -16,14 +19,23 @@ namespace PuzzleSystem {
         public bool isTaken;
         public TileGroup tileGroupParent;
 
+        public TileMovement TileMovementScript => _tileMovement;
+        private TileMovement _tileMovement;
+
+        public RectTransform RectTransform => _rectTransform;
+        private RectTransform _rectTransform;
+
         private readonly List<Tile> neighbouringTiles = new List<Tile>();
         private Puzzle _puzzle;
         private float _combiningChance;
         private int _numberOfTilesToCombineWith = 0;
-
         private bool _isMatched = false;
-        private RectTransform _rectTransform;
-        
+
+        private void Awake() {
+            _rectTransform = GetComponent<RectTransform>();
+            _tileMovement = GetComponent<TileMovement>();
+        }
+
         public void Init(Puzzle puzzle, Vector2Int coord, Sprite sprite) {
             _puzzle = puzzle;
             X = coord.x;
@@ -47,31 +59,46 @@ namespace PuzzleSystem {
         public void CombineTileWithRandomNeighbors() {
             if (isTaken) return;
             
+            var tileGroupSize = Vector2.one;
             List<Tile> tilesToCombineWith = new List<Tile>() { this };
             if (CannotCombine()) {
-                CreateTileGroup(tilesToCombineWith);
+                CreateTileGroup(tilesToCombineWith, tileGroupSize);
                 return;
             }
 
             Tile randomTile;
+            
             while (_numberOfTilesToCombineWith > 0) {
                 if (AllNeighbouringTilesAreTaken) break;
 
                 randomTile = neighbouringTiles.Random();
                 if (randomTile.isTaken) continue;
 
+                randomTile.isTaken = true;
+                CalculateCombinedSize();
                 tilesToCombineWith.Add(randomTile);
                 _numberOfTilesToCombineWith--;
             }
-            CreateTileGroup(tilesToCombineWith);
+            CreateTileGroup(tilesToCombineWith, tileGroupSize);
+            
+            void CalculateCombinedSize() {
+                var xDirection = X - randomTile.X;
+                var yDirection = Y - randomTile.Y;
+            
+                tileGroupSize.x += Mathf.Abs(xDirection);
+                tileGroupSize.y += Mathf.Abs(yDirection);
+            }
         }
         
-        private void CreateTileGroup(List<Tile> tilesToCombine) {
-            var tileGroup = Instantiate(_puzzle.tileGroupPrefab, _puzzle.tilesContainer);
-            tileGroup.Init(tilesToCombine, _puzzle);
-            
+        private void CreateTileGroup(List<Tile> tilesToCombine, Vector2 size) {
+            var tileGroup = Instantiate(_puzzle.tileGroupPrefab, _puzzle.transform);
             var tileGroupRectTransform = tileGroup.GetComponent<RectTransform>();
-            tileGroupRectTransform.localPosition = GetAveragePosition();
+
+            tileGroupRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x * _puzzle.TileDimensions.x);
+            tileGroupRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y * _puzzle.TileDimensions.y);
+            tileGroup.Init(tilesToCombine, _puzzle, this);
+            
+            tileGroupRectTransform.localPosition = transform.localPosition;
 
             foreach (var tile in tilesToCombine) {
                tile.HandleTileGrouping(tileGroup);
@@ -81,12 +108,12 @@ namespace PuzzleSystem {
             _puzzle.tileGroups.Add(tileGroup);
 
             Vector3 GetAveragePosition() {
-                var averagePosition = Vector3.zero;
+                Vector3 sumOfPositions = Vector3.zero;
                 foreach (var tile in tilesToCombine) {
-                    averagePosition += tile.GetComponent<RectTransform>().localPosition;
+                    sumOfPositions += tile.GetComponent<RectTransform>().localPosition;
                 }
 
-                return averagePosition / tilesToCombine.Count;
+                return sumOfPositions / tilesToCombine.Count;
             }
         }
 
@@ -94,11 +121,20 @@ namespace PuzzleSystem {
             isTaken = true;
             tileGroupParent = tileGroup;
             transform.SetParent(tileGroup.transform);
-            transform.localScale = Vector3.one;
             _numberOfTilesToCombineWith--;
         }
         
+        public void ResizeToOriginalSize() {
+            var tileRectTransform = gameObject.GetComponent<RectTransform>();
+            tileRectTransform.localScale = Vector3.one; 
+            tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _puzzle.TileDimensions.x);
+            tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _puzzle.TileDimensions.y);
+        }
+
         private bool AllNeighbouringTilesAreTaken => neighbouringTiles.TrueForAll(tile => tile.isTaken);
         private bool CannotCombine() => !(Random.Range(0f, 1f) < _combiningChance);
+
+        
+        
     }
 }

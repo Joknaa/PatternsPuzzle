@@ -8,15 +8,21 @@ namespace GameControllers {
         private static PuzzleController instance;
         
         public Puzzle puzzlePrefab;
-        public Puzzle _currentPuzzle;
+        public Puzzle CurrentPuzzle {
+            get {
+                GetCurrentPuzzle();
+                return _currentPuzzle;
+            }
+        }
+        private Puzzle _currentPuzzle;
 
 
         private void Start() {
             GetCurrentPuzzle();
-            _currentPuzzle.GenerateNewPuzzle();
+            CurrentPuzzle.GenerateNewPuzzle();
         }
 
-        private void GetCurrentPuzzle() {
+        public void GetCurrentPuzzle() {
             _currentPuzzle = FindObjectOfType<Puzzle>();
             if (_currentPuzzle == null) _currentPuzzle = Instantiate(puzzlePrefab);
         }

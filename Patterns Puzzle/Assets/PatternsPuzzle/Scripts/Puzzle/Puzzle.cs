@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using GameControllers;
 using OknaaEXTENSIONS;
 using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Sprites;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,21 +30,25 @@ namespace PuzzleSystem {
         public List<Tile> tiles;
         public List<TileShadow> tileShadows;
         public List<TileGroup> tileGroups;
-
+        
+        public Vector2 TileDimensions;
+        
         public Image OriginalImageInstance => _originalImageInstance;
         private Image _originalImageInstance;
-        private bool _isPuzzleGenerated;
-        private GameObject _puzzleContainer;
-
+        
         public RectTransform OriginalImageRectTransform => originalImageRectTransform;
         private RectTransform originalImageRectTransform;
+
+        
+        private bool _isPuzzleGenerated;
+        private GameObject _puzzleContainer;
 
 
         public void GenerateNewPuzzle() {
             if (_isPuzzleGenerated) return;
-            _isPuzzleGenerated = true;
             ClearTiles();
             StartPuzzleGeneration();
+            _isPuzzleGenerated = true;
         }
         
         
@@ -57,6 +60,7 @@ namespace PuzzleSystem {
             SetUpTileNeighbours();
 
             GenerateTileGroups();
+            CanvasController.Instance.UpdateContentSpacing();
         }
         
         private void InstantiateOriginalImage() {
@@ -70,6 +74,7 @@ namespace PuzzleSystem {
             _originalImageInstance.color = color;
             originalImageRectTransform = _originalImageInstance.rectTransform;
             originalImageRectTransform.MatchOther(transform.parent.GetComponent<RectTransform>());
+            
         }
         
         private void SetUpTileNeighbours() {
@@ -117,42 +122,42 @@ namespace PuzzleSystem {
             return false;
         }
 
-
-#if UNITY_EDITOR
-
-        public void SaveLevel() {
-            var seed = Random.Range(0, 100000);
-
-            if (!Directory.Exists("Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed)) {
-                AssetDatabase.CreateFolder("Assets/PatternsPuzzle/Prefabs/Puzzles", "Puzzle_" + seed);
-                AssetDatabase.CreateFolder("Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed, "Tiles");
-                AssetDatabase.CreateFolder("Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed, "Sprites");
-            }
-
-
-            string directory = "Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed;
-            string localPath = "Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed + "/Puzzle.prefab";
-
-            SaveTileSprites(directory);
-
-            PrefabUtility.SaveAsPrefabAsset(gameObject, localPath, out var prefabSuccess);
-            Debug.Log(prefabSuccess ? "Prefab was saved successfully" : "Prefab was not saved");
-        }
-
-        private void SaveTileSprites(string PuzzleDirectory) {
-            foreach (var tile in tiles) {
-                var tileSpritePath = PuzzleDirectory + "/Sprites/" + tile.name + ".png";
-                File.WriteAllBytes(tileSpritePath, tile.spriteRenderer.sprite.texture.EncodeToJPG());
-                //tile._spriteRenderer.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(tileSpritePath);
-
-                PrefabUtility.SaveAsPrefabAsset(tile.gameObject, PuzzleDirectory + "/Tiles/" + tile.name + ".prefab", out var tileSuccess);
-                Debug.Log(tileSuccess ? "Tile was saved successfully" : "Tile was not saved");
-            }
-
-            AssetDatabase.Refresh();
-        }
-
-#endif
+//
+// #if UNITY_EDITOR
+//
+//         public void SaveLevel() {
+//             var seed = Random.Range(0, 100000);
+//
+//             if (!Directory.Exists("Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed)) {
+//                 AssetDatabase.CreateFolder("Assets/PatternsPuzzle/Prefabs/Puzzles", "Puzzle_" + seed);
+//                 AssetDatabase.CreateFolder("Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed, "Tiles");
+//                 AssetDatabase.CreateFolder("Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed, "Sprites");
+//             }
+//
+//
+//             string directory = "Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed;
+//             string localPath = "Assets/PatternsPuzzle/Prefabs/Puzzles/Puzzle_" + seed + "/Puzzle.prefab";
+//
+//             SaveTileSprites(directory);
+//
+//             PrefabUtility.SaveAsPrefabAsset(gameObject, localPath, out var prefabSuccess);
+//             Debug.Log(prefabSuccess ? "Prefab was saved successfully" : "Prefab was not saved");
+//         }
+//
+//         private void SaveTileSprites(string PuzzleDirectory) {
+//             foreach (var tile in tiles) {
+//                 var tileSpritePath = PuzzleDirectory + "/Sprites/" + tile.name + ".png";
+//                 File.WriteAllBytes(tileSpritePath, tile.spriteRenderer.sprite.texture.EncodeToJPG());
+//                 //tile._spriteRenderer.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(tileSpritePath);
+//
+//                 PrefabUtility.SaveAsPrefabAsset(tile.gameObject, PuzzleDirectory + "/Tiles/" + tile.name + ".prefab", out var tileSuccess);
+//                 Debug.Log(tileSuccess ? "Tile was saved successfully" : "Tile was not saved");
+//             }
+//
+//             AssetDatabase.Refresh();
+//         }
+//
+// #endif
 
         public void ClearTiles() {
             _isPuzzleGenerated = false;
@@ -171,6 +176,7 @@ namespace PuzzleSystem {
             }
             
             PuzzleGenerator.Instance.Clear();
+            
         }
         
     }
