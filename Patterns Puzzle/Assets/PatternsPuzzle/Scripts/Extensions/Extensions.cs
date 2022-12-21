@@ -89,7 +89,6 @@ namespace OknaaEXTENSIONS {
 
         #endregion
 
-        
 
         // places rect transform to have the same dimensions as 'other', even if they don't have same parent.
         // Relatively non-expensive.
@@ -119,6 +118,24 @@ namespace OknaaEXTENSIONS {
             }
 
             return loadedScenes;
+        }
+
+        
+        /// <summary>
+        /// Randomises the order of the children of a GameObject.
+        /// </summary>
+        /// <param name="parent"></param>
+        public static void RandomizeChildrenIndexes(this Transform parent) {
+            List<Transform> children = new List<Transform>();
+            foreach (Transform child in parent) {
+                children.Add(child);
+            }
+
+            children.Shuffle();
+
+            for (int i = 0; i < children.Count; i++) {
+                children[i].SetSiblingIndex(i);
+            }
         }
 
         /// <summary>
@@ -163,6 +180,17 @@ namespace OknaaEXTENSIONS {
             }
 
             return randomElement;
+        }
+
+        public static void Shuffle<T>(this IList<T> list) {
+            int i = list.Count;
+            while (i > 1) {
+                i--;
+                int k = UnityEngine.Random.Range(0, i + 1);
+                T value = list[k];
+                list[k] = list[i];
+                list[i] = value;
+            }
         }
 
         /// <summary>
