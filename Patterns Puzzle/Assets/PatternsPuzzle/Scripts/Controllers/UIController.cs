@@ -6,10 +6,10 @@ namespace GameControllers {
         public static UIController Instance => instance ??= FindObjectOfType<UIController>();
         private static UIController instance;
 
-        public static Action<float> OnProgressChanged;
+        public static Action<int> OnProgressChanged;
 
 
-        public void UpdateProgress(float progress) {
+        public void UpdateProgress(int progress) {
             OnProgressChanged?.Invoke(progress);
         }
     }

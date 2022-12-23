@@ -16,7 +16,7 @@ namespace UI {
         }
         
         
-        private void UpdateProgressUI(float progress) {
+        private void UpdateProgressUI(int progress) {
             Debug.Log($"Progress: {progress}");
         }
         

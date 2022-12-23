@@ -7,28 +7,28 @@ namespace GameControllers {
         public static TileHighlightController Instance => instance ??= FindObjectOfType<TileHighlightController>();
         private static TileHighlightController instance;
 
-        private readonly List<TileShadow> _highlightedTileShadows = new List<TileShadow>();
+        private readonly List<TileSlot> _highlightedTileShadows = new List<TileSlot>();
 
 
-        public void SetHighlight(TileShadow tileShadow, bool doHighlight) {
-            var isHighlighted = _highlightedTileShadows.Contains(tileShadow);
+        public void SetHighlight(TileSlot tileSlot, bool doHighlight) {
+            var isHighlighted = _highlightedTileShadows.Contains(tileSlot);
             if (doHighlight && !isHighlighted) {
-                _highlightedTileShadows.Add(tileShadow);
+                _highlightedTileShadows.Add(tileSlot);
                 return;
             }
 
             if (!doHighlight && isHighlighted) {
-                _highlightedTileShadows.Remove(tileShadow);
+                _highlightedTileShadows.Remove(tileSlot);
             }
         }
 
 
-        public void AddHighlightedTile(TileShadow tileShadow) {
-            _highlightedTileShadows.Add(tileShadow);
+        public void AddHighlightedTile(TileSlot tileSlot) {
+            _highlightedTileShadows.Add(tileSlot);
         }
 
-        public void RemoveHighlightedTile(TileShadow tileShadow) {
-            _highlightedTileShadows.Remove(tileShadow);
+        public void RemoveHighlightedTile(TileSlot tileSlot) {
+            _highlightedTileShadows.Remove(tileSlot);
         }
 
         public void ClearHighlightedTiles() {

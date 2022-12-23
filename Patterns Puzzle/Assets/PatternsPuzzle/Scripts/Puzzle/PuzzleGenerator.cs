@@ -23,7 +23,15 @@ namespace PuzzleSystem {
             GeneratePuzzleTiles();
         }
         
-        public void Clear() => _isInit = false;
+        
+        private void Init(Puzzle puzzle) {
+            _puzzle = puzzle;
+            _originalImage = _puzzle._inputImage;
+            _tileCount = _puzzle._tileCount;
+            _tilePrefab = _puzzle.tilePrefab;
+            _tilesContainer = _puzzle.tilesContainer;
+            _isInit = true;
+        }
         
         private void GeneratePuzzleTiles() {
             _originalImage.SplitTextureIntoSprites(_tileCount, out var sprites);
@@ -42,14 +50,6 @@ namespace PuzzleSystem {
             }
         }
 
-        private void Init(Puzzle puzzle) {
-            _puzzle = puzzle;
-            _originalImage = _puzzle._inputImage;
-            _tileCount = _puzzle._tileCount;
-            _tilePrefab = _puzzle.tilePrefab;
-            _tilesContainer = _puzzle.tilesContainer;
-            _isInit = true;
-        }
         
         public void SetTileDimensionsRelativeToParentInCanvas(Object tile, Object parentInCanvas, Vector2Int tileCoordinates, Vector2Int tileCount) {
             var i = tileCoordinates.x;
@@ -66,6 +66,8 @@ namespace PuzzleSystem {
             tileRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, tileDimensions.y);
             tileRectTransform.localPosition = new Vector3((i + 0.5f) * tileDimensions.x, (j + 0.5f) * tileDimensions.y, 0);
         }
-       
+
+        
+        public void Clear() => _isInit = false;
     }
 }

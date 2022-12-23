@@ -17,8 +17,7 @@ namespace UI {
             _progressText.text = "Progress: 0%";
         }
 
-        private void UpdateProgress(float progress) {
-            progress = (int)(progress * 100);
+        private void UpdateProgress(int progress) {
             _progressText.text = $"Progress: {progress}%";
         }
 

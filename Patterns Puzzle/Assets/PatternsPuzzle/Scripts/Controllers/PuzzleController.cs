@@ -16,8 +16,8 @@ namespace GameControllers {
             }
         }
         private Puzzle _currentPuzzle;
-
-
+        
+      
         private void Start() {
             GetCurrentPuzzle();
             CurrentPuzzle.GenerateNewPuzzle();
@@ -29,7 +29,7 @@ namespace GameControllers {
             if (_currentPuzzle == null) _currentPuzzle = Instantiate(puzzlePrefab);
         }
 
-        
+            
         private void OnDestroy() {
             instance = null;
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using GameControllers;
 using OknaaEXTENSIONS;
@@ -28,7 +29,7 @@ namespace PuzzleSystem {
 
         [Header("Output Lists: ")] 
         public List<Tile> tiles;
-        public List<TileShadow> tileShadows;
+        public List<TileSlot> tileShadows;
         public List<TileGroup> tileGroups;
         
         public Vector2 TileDimensions;
@@ -44,6 +45,11 @@ namespace PuzzleSystem {
         private GameObject _puzzleContainer;
 
 
+        private void Awake() {
+        }
+
+        #region Puzzle Generation
+
         public void GenerateNewPuzzle() {
             if (_isPuzzleGenerated) return;
             ClearTiles();
@@ -51,7 +57,7 @@ namespace PuzzleSystem {
             _isPuzzleGenerated = true;
         }
         
-        
+
         private void StartPuzzleGeneration() {
             if (CannotSplitImage()) return;
 
@@ -123,6 +129,10 @@ namespace PuzzleSystem {
             return false;
         }
 
+        #endregion
+
+        #region Puzzle Saving
+
 //
 // #if UNITY_EDITOR
 //
@@ -160,6 +170,10 @@ namespace PuzzleSystem {
 //
 // #endif
 
+        #endregion
+        
+        
+        
         public void ClearTiles() {
             _isPuzzleGenerated = false;
             tiles.Clear();
@@ -181,6 +195,8 @@ namespace PuzzleSystem {
         }
         
         public int GetTileCount() => tiles.Count;
-        
+
+        private void OnDestroy() {
+        }
     }
 }

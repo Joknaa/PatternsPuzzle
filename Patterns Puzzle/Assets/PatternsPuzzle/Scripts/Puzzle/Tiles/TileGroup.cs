@@ -18,16 +18,16 @@ namespace PuzzleSystem {
         private TileMovement _movementScript;
         private GameObject _tileGroupInstance;
         private bool _isInInventory = true;
-        private int _tileValue;
+        
+        public int TilesValue { get; private set; }
 
         private bool IsSnapped => _movementScript.IsSnapped;
-        private bool IsInInventory => _movementScript.IsInInventory;
+        private bool IsMatched => _movementScript.OriginTile.IsMatched;
 
-        private bool IsDragged {
-            set => _movementScript.IsDragged = value;
-        }
-        
-        
+        private bool IsDragged { set => _movementScript.IsDragged = value; }
+
+
+
         private void Awake() {
             _movementScript = GetComponent<TileMovement>();
         }
@@ -39,6 +39,7 @@ namespace PuzzleSystem {
         }
 
         private void OnPointerDown(BaseEventData data) {
+            if (IsMatched) return;
             if (_isInInventory) {
                 var tileTransform = transform;
                 _originalPosition = tileTransform.position;
@@ -48,7 +49,7 @@ namespace PuzzleSystem {
                 SetTilePlaceHolder();
             }
 
-            transform.SetParent(_puzzle.tileShadowsContainer);
+            transform.SetParent(CanvasController.Instance.Canvas.transform);
         }
 
         private void SetTilePlaceHolder() {
@@ -62,21 +63,21 @@ namespace PuzzleSystem {
         }
 
         private void OnDrag(BaseEventData data) {
+            if (IsMatched) return;
             transform.position = ((PointerEventData)data).position;
             IsDragged = true;
         }
 
         private void OnPointerUp(BaseEventData data) {
             IsDragged = false;
-            if (IsSnapped) {
+            if (IsSnapped || IsMatched) {
                 if (_isInInventory) {
                     Destroy(_tileGroupInstance);
                     _isInInventory = false;
                 }
                 return;
             }
-            
-            
+
             transform.SetParent(_originalParent);
             transform.SetPositionAndRotation(_originalPosition, Quaternion.identity);
             transform.SetSiblingIndex(_startIndex);
@@ -94,8 +95,10 @@ namespace PuzzleSystem {
             if (_movementScript == null) _movementScript = GetComponent<TileMovement>();
             _movementScript.OriginTile = originTile;
             tiles = groupedTiles;
+            TilesValue = tiles.Count;
             _puzzle = puzzle;
             name = "TileGroup " + (tiles.Count);
+            
 
             ResizeTiles();
         }

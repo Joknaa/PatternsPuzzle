@@ -6,9 +6,9 @@ TagManager:
   tags:
   - MainCanvas
   - Tile
-  - TileShadow
   - TileGroup
   - TilesInventory
+  - TileSlot
   layers:
   - Default
   - TransparentFX

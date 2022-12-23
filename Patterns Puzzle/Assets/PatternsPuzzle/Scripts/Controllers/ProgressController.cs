@@ -7,7 +7,7 @@ namespace GameControllers {
         public static ProgressController Instance => instance ??= FindObjectOfType<ProgressController>();
         private static ProgressController instance;
 
-        public float Progress { get; private set; } = 0.0f;
+        public int Progress { get; private set; } = 0;
 
         private int _totalProgress;
 
@@ -18,13 +18,13 @@ namespace GameControllers {
         
         private void SetupProgressController() {
             _totalProgress = PuzzleController.Instance.CurrentPuzzle.GetTileCount();
-            Progress = 0.0f;
+            Progress = 0;
         }
 
         
         public void AddProgress(int progress) {
-            var addition = (float) progress / _totalProgress;
-            Progress += addition;
+            var addition = ((float)progress * 100)/ _totalProgress;
+            Progress += Mathf.RoundToInt(addition);
             UIController.Instance.UpdateProgress(Progress);
         }
 

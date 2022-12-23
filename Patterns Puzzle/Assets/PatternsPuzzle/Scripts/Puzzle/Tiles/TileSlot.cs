@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
 namespace PuzzleSystem {
-    public class TileShadow : MonoBehaviour {
+    public class TileSlot : MonoBehaviour {
+        public Tile Tile => _tile;
         private Tile _tile;
         private CanvasGroup _canvasGroup;
         private Vector3 _startPosition;
@@ -19,7 +20,7 @@ namespace PuzzleSystem {
 
         public void Init(Puzzle puzzle, Vector2Int coordinates, Tile tile) {
             _tile = tile;
-            name = $"TileShadow of {tile.name}";
+            name = $"TileSlot of {tile.name}";
             _puzzle = puzzle;
             _id = _puzzle.TileCoordinates2Index(coordinates);
 
