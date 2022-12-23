@@ -6,7 +6,8 @@ namespace GameControllers {
     public class PuzzleController : MonoBehaviour {
         public static PuzzleController Instance => instance ??= FindObjectOfType<PuzzleController>();
         private static PuzzleController instance;
-        
+
+        public static Action OnPuzzleGenerationComplete;
         public Puzzle puzzlePrefab;
         public Puzzle CurrentPuzzle {
             get {
@@ -20,6 +21,7 @@ namespace GameControllers {
         private void Start() {
             GetCurrentPuzzle();
             CurrentPuzzle.GenerateNewPuzzle();
+            OnPuzzleGenerationComplete?.Invoke();
         }
 
         public void GetCurrentPuzzle() {

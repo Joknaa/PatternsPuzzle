@@ -59,10 +59,9 @@ namespace PuzzleSystem {
         public void CombineTileWithRandomNeighbors() {
             if (isTaken) return;
             
-            var tileGroupSize = Vector2.one;
             List<Tile> tilesToCombineWith = new List<Tile>() { this };
             if (CannotCombine()) {
-                CreateTileGroup(tilesToCombineWith, tileGroupSize);
+                CreateTileGroup(tilesToCombineWith);
                 return;
             }
 
@@ -75,29 +74,20 @@ namespace PuzzleSystem {
                 if (randomTile.isTaken) continue;
 
                 randomTile.isTaken = true;
-                CalculateCombinedSize();
                 tilesToCombineWith.Add(randomTile);
                 _numberOfTilesToCombineWith--;
             }
-            CreateTileGroup(tilesToCombineWith, tileGroupSize);
-            
-            void CalculateCombinedSize() {
-                var xDirection = X - randomTile.X;
-                var yDirection = Y - randomTile.Y;
-            
-                tileGroupSize.x += Mathf.Abs(xDirection);
-                tileGroupSize.y += Mathf.Abs(yDirection);
-            }
+            CreateTileGroup(tilesToCombineWith);
         }
         
-        private void CreateTileGroup(List<Tile> tilesToCombine, Vector2 size) {
+        private void CreateTileGroup(List<Tile> tilesToCombine) {
             var tileGroup = Instantiate(_puzzle.tileGroupPrefab, _puzzle.transform);
             var tileGroupRectTransform = tileGroup.GetComponent<RectTransform>();
 
-            tileGroupRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x * _puzzle.TileDimensions.x);
-            tileGroupRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y * _puzzle.TileDimensions.y);
+            tileGroupRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _puzzle.TileDimensions.x);
+            tileGroupRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _puzzle.TileDimensions.y);
             tileGroup.Init(tilesToCombine, _puzzle, this);
-            
+
             tileGroupRectTransform.localPosition = transform.localPosition;
 
             foreach (var tile in tilesToCombine) {
@@ -106,15 +96,6 @@ namespace PuzzleSystem {
             
             tileGroup.transform.SetParent(_puzzle.tilesContainer);
             _puzzle.tileGroups.Add(tileGroup);
-
-            Vector3 GetAveragePosition() {
-                Vector3 sumOfPositions = Vector3.zero;
-                foreach (var tile in tilesToCombine) {
-                    sumOfPositions += tile.GetComponent<RectTransform>().localPosition;
-                }
-
-                return sumOfPositions / tilesToCombine.Count;
-            }
         }
 
         private void HandleTileGrouping(TileGroup tileGroup) {

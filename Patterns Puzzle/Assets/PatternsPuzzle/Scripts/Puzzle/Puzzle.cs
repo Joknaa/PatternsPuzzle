@@ -83,6 +83,7 @@ namespace PuzzleSystem {
 
         private void GenerateTileGroups() {
             foreach (var tile in tiles) tile.CombineTileWithRandomNeighbors();
+            // tilesContainer.ShuffleChildren();
         }
         
         private void GeneratePuzzle() {
@@ -178,6 +179,8 @@ namespace PuzzleSystem {
             PuzzleGenerator.Instance.Clear();
             
         }
+        
+        public int GetTileCount() => tiles.Count;
         
     }
 }

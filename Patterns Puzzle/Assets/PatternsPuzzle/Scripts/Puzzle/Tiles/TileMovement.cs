@@ -1,16 +1,18 @@
-﻿using GameControllers;
+﻿using System;
+using GameControllers;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace PuzzleSystem {
     public class TileMovement : MonoBehaviour {
-        public Tile OriginTile;
-        public bool IsDragged;
-        public bool IsSnapped;
+        [HideInInspector] public Tile OriginTile;
+        [HideInInspector] public bool IsDragged;
+        [HideInInspector] public bool IsSnapped;
+        [HideInInspector] public bool IsInInventory;
+     
 
-        
-        
+
         void Update() {
             if (!IsDragged) return;
 
@@ -22,6 +24,11 @@ namespace PuzzleSystem {
             if (hits == null) return;
             foreach (var hit in hits) {
                 var hitGameObject = hit.gameObject;
+                if (hitGameObject.CompareTag("TilesInventory")) {
+                    IsInInventory = true;
+                    break;
+                }
+                
                 if (hitGameObject.CompareTag("TileShadow")) {
                     var shadow = hitGameObject.GetComponent<TileShadow>();
                     OnHoverOverEmptySlot(shadow);
@@ -34,6 +41,7 @@ namespace PuzzleSystem {
 
         private void OnHoverOverEmptySlot(TileShadow shadow) {
             IsSnapped = true;
+            IsInInventory = false;
             transform.position = shadow.RectTransform.position;
         }
         
