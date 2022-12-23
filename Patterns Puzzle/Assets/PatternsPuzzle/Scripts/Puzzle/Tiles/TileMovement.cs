@@ -1,17 +1,19 @@
-﻿using GameControllers;
+﻿using System;
+using GameControllers;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace PuzzleSystem {
     public class TileMovement : MonoBehaviour {
-        public Tile OriginTile;
-        public bool IsDragged;
-        public bool IsSnapped;
+        [HideInInspector] public Tile OriginTile;
+        [HideInInspector] public bool IsDragged;
+        [HideInInspector] public bool IsSnapped;
+     
+        private 
 
-        
-        
         void Update() {
+            if (OriginTile.IsMatched) return;
             if (!IsDragged) return;
 
             HandleTileMovement();
@@ -22,8 +24,12 @@ namespace PuzzleSystem {
             if (hits == null) return;
             foreach (var hit in hits) {
                 var hitGameObject = hit.gameObject;
-                if (hitGameObject.CompareTag("TileShadow")) {
-                    var shadow = hitGameObject.GetComponent<TileShadow>();
+                if (hitGameObject.CompareTag("TilesInventory")) {
+                    break;
+                }
+                
+                if (hitGameObject.CompareTag("TileSlot")) {
+                    var shadow = hitGameObject.GetComponent<TileSlot>();
                     OnHoverOverEmptySlot(shadow);
                     break;
                 }
@@ -32,9 +38,10 @@ namespace PuzzleSystem {
             }
         }
 
-        private void OnHoverOverEmptySlot(TileShadow shadow) {
+        private void OnHoverOverEmptySlot(TileSlot slot) {
             IsSnapped = true;
-            transform.position = shadow.RectTransform.position;
+            transform.position = slot.RectTransform.position;
+            OriginTile.CheckIfTileMatchesSlot(slot);
         }
         
         

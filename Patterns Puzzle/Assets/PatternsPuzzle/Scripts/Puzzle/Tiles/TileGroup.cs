@@ -16,14 +16,18 @@ namespace PuzzleSystem {
         private Transform _originalParent;
         private int _startIndex;
         private TileMovement _movementScript;
+        private GameObject _tileGroupInstance;
+        private bool _isInInventory = true;
+        
+        public int TilesValue { get; private set; }
 
         private bool IsSnapped => _movementScript.IsSnapped;
+        private bool IsMatched => _movementScript.OriginTile.IsMatched;
 
-        private bool IsDragged {
-            set => _movementScript.IsDragged = value;
-        }
-        
-        
+        private bool IsDragged { set => _movementScript.IsDragged = value; }
+
+
+
         private void Awake() {
             _movementScript = GetComponent<TileMovement>();
         }
@@ -35,22 +39,45 @@ namespace PuzzleSystem {
         }
 
         private void OnPointerDown(BaseEventData data) {
-            var tileTransform = transform;
-            _originalPosition = tileTransform.position;
-            _originalParent = tileTransform.parent;
-            _startIndex = transform.GetSiblingIndex();
-            transform.SetParent(_puzzle.tileShadowsContainer);
+            if (IsMatched) return;
+            if (_isInInventory) {
+                var tileTransform = transform;
+                _originalPosition = tileTransform.position;
+                _originalParent = tileTransform.parent;
+                _startIndex = transform.GetSiblingIndex();
+
+                SetTilePlaceHolder();
+            }
+
+            transform.SetParent(CanvasController.Instance.Canvas.transform);
+        }
+
+        private void SetTilePlaceHolder() {
+            _tileGroupInstance = Instantiate(gameObject, _originalPosition, Quaternion.identity, _originalParent);
+            _tileGroupInstance.transform.SetSiblingIndex(_startIndex);
+            Destroy(_tileGroupInstance.GetComponent<TileGroup>());
+            var tiles = _tileGroupInstance.GetComponentsInChildren<Tile>();
+            foreach (var tile in tiles) {
+                Destroy(tile.GetComponent<TileMovement>());
+            }
         }
 
         private void OnDrag(BaseEventData data) {
+            if (IsMatched) return;
             transform.position = ((PointerEventData)data).position;
             IsDragged = true;
         }
 
         private void OnPointerUp(BaseEventData data) {
             IsDragged = false;
-            if (IsSnapped) return;
-            
+            if (IsSnapped || IsMatched) {
+                if (_isInInventory) {
+                    Destroy(_tileGroupInstance);
+                    _isInInventory = false;
+                }
+                return;
+            }
+
             transform.SetParent(_originalParent);
             transform.SetPositionAndRotation(_originalPosition, Quaternion.identity);
             transform.SetSiblingIndex(_startIndex);
@@ -61,14 +88,17 @@ namespace PuzzleSystem {
         private void RefreshScrollListUI() {
             var tileContainer = _puzzle.tilesContainer;
             tileContainer.GetChild(1).transform.SetAsFirstSibling();
+            tileContainer.GetChild(1).transform.SetAsFirstSibling();
         }
 
         public void Init(List<Tile> groupedTiles, Puzzle puzzle, Tile originTile) {
             if (_movementScript == null) _movementScript = GetComponent<TileMovement>();
             _movementScript.OriginTile = originTile;
             tiles = groupedTiles;
+            TilesValue = tiles.Count;
             _puzzle = puzzle;
             name = "TileGroup " + (tiles.Count);
+            
 
             ResizeTiles();
         }
