@@ -43,6 +43,7 @@ namespace PuzzleSystem {
             _combiningChance = _puzzle.combiningChance;
             _numberOfTilesToCombineWith = _puzzle.numberOfTilesToCombine;
             gameObject.name = $"Tile {X} {Y}";
+            isTaken = false;
 
             if (spriteRenderer == null) spriteRenderer = GetComponent<Image>();
             spriteRenderer.sprite = sprite;
@@ -68,15 +69,18 @@ namespace PuzzleSystem {
             }
 
             Tile randomTile;
-
+            print("tileName: " + name + ". neighbouringTiles.Count: " + neighbouringTiles.Count);
             while (_numberOfTilesToCombineWith > 0) {
+                print("while BEFORE break. break ?" + AllNeighbouringTilesAreTaken);
                 if (AllNeighbouringTilesAreTaken) break;
 
                 randomTile = neighbouringTiles.Random();
+                print("while selected: " + randomTile.name + ". isTaken: " + randomTile.isTaken);
                 if (randomTile.isTaken) continue;
 
                 randomTile.isTaken = true;
                 tilesToCombineWith.Add(randomTile);
+                print("tileName: " + name + ". counter: " + _numberOfTilesToCombineWith + ".. took: " + randomTile.name);
                 _numberOfTilesToCombineWith--;
             }
 
@@ -102,10 +106,10 @@ namespace PuzzleSystem {
         }
 
         private void HandleTileGrouping(TileGroup tileGroup) {
-            isTaken = true;
+            // isTaken = true;
             tileGroupParent = tileGroup;
             transform.SetParent(tileGroup.transform);
-            _numberOfTilesToCombineWith--;
+            //_numberOfTilesToCombineWith--;
         }
 
         public void ResizeToOriginalSize() {

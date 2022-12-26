@@ -36,7 +36,6 @@ namespace OknaaEXTENSIONS {
             for (int i = 0; i < tilesCount_Width; i++) {
                 for (int j = 0; j < tilesCount_Height; j++) {
                     outputImages.Add(CreateTile(i, j));
-                    // outputImages.Add(CreateTileShadow(i, j));
                 }
             }
         }

@@ -25,15 +25,14 @@ namespace PuzzleSystem {
         [Header("Settings: ")]
         public Vector2Int _tileCount;
         [Range(0.0f, 1.0f)] [SerializeField] public float combiningChance;
-        [Range(0, 10)] [SerializeField] public int numberOfTilesToCombine;
+        [Range(0, 4)] [SerializeField] public int numberOfTilesToCombine;
 
         [Header("Output Lists: ")] 
         public List<Tile> tiles;
         public List<TileSlot> tileShadows;
         public List<TileGroup> tileGroups;
         
-        public Vector2 TileDimensions;
-        
+        [HideInInspector] public Vector2 TileDimensions;
         public Image OriginalImageInstance => _originalImageInstance;
         private Image _originalImageInstance;
         
@@ -44,10 +43,7 @@ namespace PuzzleSystem {
         private bool _isPuzzleGenerated;
         private GameObject _puzzleContainer;
 
-
-        private void Awake() {
-        }
-
+        
         #region Puzzle Generation
 
         public void GenerateNewPuzzle() {
@@ -89,7 +85,7 @@ namespace PuzzleSystem {
 
         private void GenerateTileGroups() {
             foreach (var tile in tiles) tile.CombineTileWithRandomNeighbors();
-            // tilesContainer.ShuffleChildren();
+            tilesContainer.ShuffleChildren();
         }
         
         private void GeneratePuzzle() {

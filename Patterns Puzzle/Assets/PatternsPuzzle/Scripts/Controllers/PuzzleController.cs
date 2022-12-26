@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using PuzzleSystem;
 using UnityEngine;
 
@@ -16,8 +17,7 @@ namespace GameControllers {
             }
         }
         private Puzzle _currentPuzzle;
-        
-      
+
         private void Start() {
             GetCurrentPuzzle();
             CurrentPuzzle.GenerateNewPuzzle();
@@ -28,8 +28,7 @@ namespace GameControllers {
             _currentPuzzle = FindObjectOfType<Puzzle>();
             if (_currentPuzzle == null) _currentPuzzle = Instantiate(puzzlePrefab);
         }
-
-            
+        
         private void OnDestroy() {
             instance = null;
         }
