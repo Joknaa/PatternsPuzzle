@@ -14,6 +14,7 @@ namespace GameControllers {
 
         private void Awake() {
             PuzzleController.OnPuzzleGenerationComplete += SetupProgressController;
+            Tile.OnTilePlacedInCorrectSlot += AddProgress;
         }
         
         private void SetupProgressController() {
@@ -31,6 +32,7 @@ namespace GameControllers {
         
         private void OnDestroy() {
             PuzzleController.OnPuzzleGenerationComplete -= SetupProgressController;
+            Tile.OnTilePlacedInCorrectSlot -= AddProgress;
         }
     }
 }

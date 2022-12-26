@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GameControllers;
 using OknaaEXTENSIONS;
 using UnityEngine;
@@ -7,6 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace PuzzleSystem {
     public class Tile : MonoBehaviour {
+        public static Action<int> OnTilePlacedInCorrectSlot;
         public TileMovement TileMovementScript => _tileMovement;
         private TileMovement _tileMovement;
 
@@ -128,7 +130,7 @@ namespace PuzzleSystem {
             if (slotHoveredOver != slot) return;
             IsMatched = true;
             tileGroupParent.transform.SetParent(_puzzle.transform);
-            ProgressController.Instance.AddProgress(tileGroupParent.TilesValue);
+            OnTilePlacedInCorrectSlot?.Invoke(tileGroupParent.TilesValue);
         }
     }
 }

@@ -72,7 +72,7 @@ namespace PuzzleSystem {
             _originalImageInstance.sprite = imageSprite;
 
             var color = _originalImageInstance.color;
-            color.a = 0.5f;
+            color.a = 0.2f;
             _originalImageInstance.color = color;
             originalImageRectTransform = _originalImageInstance.rectTransform;
             originalImageRectTransform.MatchOther(transform.parent.GetComponent<RectTransform>());
@@ -191,8 +191,6 @@ namespace PuzzleSystem {
         }
         
         public int GetTileCount() => tiles.Count;
-
-        private void OnDestroy() {
-        }
+        
     }
 }
