@@ -46,8 +46,9 @@ namespace PuzzleSystem {
         
         #region Puzzle Generation
 
-        public void GenerateNewPuzzle() {
+        public void GenerateNewPuzzle(Texture2D newInputImage = null) {
             if (_isPuzzleGenerated) return;
+            if (newInputImage != null) _inputImage = newInputImage;
             ClearTiles();
             StartPuzzleGeneration();
             _isPuzzleGenerated = true;

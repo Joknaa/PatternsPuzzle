@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using PuzzleSystem;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameControllers {
     public class PuzzleController : MonoBehaviour {
@@ -18,14 +19,14 @@ namespace GameControllers {
         }
         private Puzzle _currentPuzzle;
 
-        private void Start() {
+        public void GenerateNewPuzzle(Texture2D inputImage) {
             GetCurrentPuzzle();
-            CurrentPuzzle.GenerateNewPuzzle();
+            CurrentPuzzle.GenerateNewPuzzle(inputImage);
             OnPuzzleGenerationComplete?.Invoke();
         }
 
         public void GetCurrentPuzzle() {
-            _currentPuzzle = FindObjectOfType<Puzzle>();
+            if (_currentPuzzle == null) _currentPuzzle = FindObjectOfType<Puzzle>();
             if (_currentPuzzle == null) _currentPuzzle = Instantiate(puzzlePrefab);
         }
         

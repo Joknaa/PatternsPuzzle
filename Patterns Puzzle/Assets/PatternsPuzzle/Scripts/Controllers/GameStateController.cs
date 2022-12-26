@@ -2,12 +2,8 @@
 
 namespace GameControllers {
     public enum GameState {
-        None,
-        StartPanel,
         PuzzleSelectionPanel,
         Playing,
-        Paused,
-        PuzzleSolved
     }
     
     public class GameStateController {
@@ -19,7 +15,7 @@ namespace GameControllers {
             get => _currentGameState;
             set => SetState(value);
         }
-        private GameState _currentGameState = GameState.None;
+        private GameState _currentGameState = GameState.PuzzleSelectionPanel;
         
         
         private void SetState(GameState newState) {
