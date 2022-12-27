@@ -33,7 +33,7 @@ namespace GameControllers {
 
         public void ClearHighlightedTiles() {
             foreach (var tileShadow in _highlightedTileShadows) {
-                tileShadow.ActivateHighlight(false);
+                tileShadow.SetHoveredOver(false);
             }
 
             _highlightedTileShadows.Clear();

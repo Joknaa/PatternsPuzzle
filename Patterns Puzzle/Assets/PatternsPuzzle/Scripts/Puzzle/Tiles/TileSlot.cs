@@ -15,7 +15,7 @@ namespace PuzzleSystem {
         private void Awake() {
             _canvasGroup = GetComponent<CanvasGroup>();
             _rectTransform = GetComponent<RectTransform>();
-            ActivateHighlight(false);
+            SetHoveredOver(false);
         }
 
         public void Init(Puzzle puzzle, Vector2Int coordinates, Tile tile) {
@@ -31,7 +31,7 @@ namespace PuzzleSystem {
         }
 
 
-        public void ActivateHighlight(bool active) {
+        public void SetHoveredOver(bool active) {
             _canvasGroup.alpha = active ? 1f : 0;
         }
     }

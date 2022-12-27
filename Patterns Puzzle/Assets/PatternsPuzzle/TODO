@@ -1,0 +1,3 @@
+﻿CHECK - Make the tile movement smooth
+CHECK - move the tile back to the inventory if the player releases the touch
+- make the tiles the same size inside the inventory, and resize them after touching them

@@ -9,8 +9,15 @@ using Random = UnityEngine.Random;
 namespace PuzzleSystem {
     public class Tile : MonoBehaviour {
         public static Action<int> OnTilePlacedInCorrectSlot;
-        public TileMovement TileMovementScript => _tileMovement;
-        private TileMovement _tileMovement;
+        public TileGroupMovement TileGroupMovementScript => _tileGroupMovement;
+        private TileGroupMovement _tileGroupMovement;
+        
+        public TileShadowDetector TileShadowDetectorScript => _tileShadowDetector;
+        private TileShadowDetector _tileShadowDetector;
+
+        public Puzzle Puzzle => _puzzle;
+        private Puzzle _puzzle;
+
 
         public bool IsMatched { get; private set; } = false;
 
@@ -18,8 +25,7 @@ namespace PuzzleSystem {
         private RectTransform _rectTransform;
 
         private readonly List<Tile> neighbouringTiles = new List<Tile>();
-        private Puzzle _puzzle;
-        private TileGroup tileGroupParent;
+        public TileGroup tileGroupParent;
         private TileSlot slot;
         private Image spriteRenderer;
         private float _combiningChance;
@@ -31,7 +37,8 @@ namespace PuzzleSystem {
 
         private void Awake() {
             _rectTransform = GetComponent<RectTransform>();
-            _tileMovement = GetComponent<TileMovement>();
+            _tileGroupMovement = GetComponent<TileGroupMovement>();
+            _tileShadowDetector = GetComponent<TileShadowDetector>();
             slot = GetComponentInChildren<TileSlot>();
             spriteRenderer = GetComponent<Image>();
         }
@@ -122,11 +129,14 @@ namespace PuzzleSystem {
 
         #endregion
 
-        public void CheckIfTileMatchesSlot(TileSlot slotHoveredOver) {
-            if (slotHoveredOver != slot) return;
-            IsMatched = true;
+        public bool TileMatchesSlot(TileSlot slotHoveredOver) => slotHoveredOver == slot;
+
+        public void SetTileAsMatched() {
             tileGroupParent.transform.SetParent(_puzzle.transform);
+            tileGroupParent.transform.position = slot.transform.position;
             OnTilePlacedInCorrectSlot?.Invoke(tileGroupParent.TilesValue);
         }
+        
+        
     }
 }
