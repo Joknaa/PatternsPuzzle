@@ -24,9 +24,8 @@ namespace GameControllers {
 
         
         public void AddProgress(int progress) {
-            var addition = ((float)progress * 100)/ _totalProgress;
-            Progress += Mathf.RoundToInt(addition);
-            UIController.Instance.UpdateProgress(Progress);
+            Progress += progress;
+            UIController.Instance.UpdateProgress((int)((float)Progress * 100 / _totalProgress));
         }
 
         

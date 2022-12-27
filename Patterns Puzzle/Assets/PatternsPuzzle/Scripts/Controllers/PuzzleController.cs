@@ -19,9 +19,9 @@ namespace GameControllers {
         }
         private Puzzle _currentPuzzle;
 
-        public void GenerateNewPuzzle(Texture2D inputImage) {
+        public void GenerateNewPuzzle(string puzzleName, Texture2D inputImage) {
             GetCurrentPuzzle();
-            CurrentPuzzle.GenerateNewPuzzle(inputImage);
+            CurrentPuzzle.GenerateNewPuzzle(puzzleName, inputImage);
             OnPuzzleGenerationComplete?.Invoke();
         }
 

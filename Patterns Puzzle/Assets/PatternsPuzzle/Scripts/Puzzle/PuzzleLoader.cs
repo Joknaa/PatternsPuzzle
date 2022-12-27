@@ -1,10 +1,12 @@
 ﻿using System;
 using GameControllers;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace PuzzleSystem {
     public class PuzzleLoader : MonoBehaviour {
+        public string puzzleName;
         
         private Texture2D _puzzleOriginalImage;
 
@@ -16,7 +18,8 @@ namespace PuzzleSystem {
 
         private void OnPuzzleClick() {
             GameStateController.Instance.CurrentGameState = GameState.Playing;
-            PuzzleController.Instance.GenerateNewPuzzle(_puzzleOriginalImage);
+            PuzzleController.Instance.GenerateNewPuzzle(puzzleName, _puzzleOriginalImage);
+            SaveController.Instance.LoadPuzzle(PuzzleController.Instance.CurrentPuzzle);
         }
     }
 }

@@ -72,7 +72,7 @@ namespace PuzzleSystem {
             IsDragged = false;
             if (IsSnapped || IsMatched) {
                 if (_isInInventory) {
-                    Destroy(_tileGroupInstance);
+                    Destroy(_tileGroupInstance.gameObject);
                     _isInInventory = false;
                 }
                 return;

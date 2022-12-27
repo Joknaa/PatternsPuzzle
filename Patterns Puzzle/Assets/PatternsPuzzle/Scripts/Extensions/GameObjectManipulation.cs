@@ -105,5 +105,17 @@ namespace OknaaEXTENSIONS {
             //rectTransf.ForceUpdateRectTransforms(); - needed before we adjust pivot a second time?
             rt.pivot = myPrevPivot;
         }
+        
+        /// <summary>
+        /// Replaces the transform of a gameobject with a new one, and returns the new transform.
+        /// </summary>
+        /// <param name="t">the old transform</param>
+        /// <param name="other">the new transform</param>
+        public static void SetTransform(this Transform t, Transform other) {
+            t.SetParent(other.parent);
+            t.SetPositionAndRotation(other.position, other.rotation);
+            t.SetSiblingIndex(other.GetSiblingIndex());
+            t.localScale = other.localScale;
+        }
     }
 }

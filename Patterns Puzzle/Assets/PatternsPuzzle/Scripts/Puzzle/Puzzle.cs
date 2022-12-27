@@ -10,6 +10,8 @@ using UnityEngine.UI;
 namespace PuzzleSystem {
     public class Puzzle : MonoBehaviour {
         public static int TileGroupsCount = 0;
+
+        [HideInInspector] public string puzzleName;
         [Header("Containers: ")] public Transform tilesContainer;
         public Transform tileShadowsContainer;
 
@@ -39,9 +41,10 @@ namespace PuzzleSystem {
 
         #region Puzzle Generation
 
-        public void GenerateNewPuzzle(Texture2D newInputImage = null) {
+        public void GenerateNewPuzzle(string puzzleName, Texture2D newInputImage = null) {
             if (_isPuzzleGenerated) return;
             if (newInputImage != null) _inputImage = newInputImage;
+            this.puzzleName = puzzleName;
             ClearTiles();
             StartPuzzleGeneration();
             _isPuzzleGenerated = true;
@@ -52,7 +55,7 @@ namespace PuzzleSystem {
             if (CannotSplitImage()) return;
 
             InstantiateOriginalImage();
-            GeneratePuzzle();
+            GeneratePuzzleTiles();
             SetUpTileNeighbours();
 
             GenerateTileGroups();
@@ -81,7 +84,7 @@ namespace PuzzleSystem {
             tilesContainer.ShuffleChildren();
         }
 
-        private void GeneratePuzzle() {
+        private void GeneratePuzzleTiles() {
             PuzzleGenerator.Instance.GeneratePuzzle(this);
         }
 
