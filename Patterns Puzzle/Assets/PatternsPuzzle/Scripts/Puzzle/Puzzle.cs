@@ -10,40 +10,33 @@ using UnityEngine.UI;
 namespace PuzzleSystem {
     public class Puzzle : MonoBehaviour {
         public static int TileGroupsCount = 0;
-        [Header("Containers: ")] 
-        public Transform tilesContainer;
+        [Header("Containers: ")] public Transform tilesContainer;
         public Transform tileShadowsContainer;
 
-        [Header("Prefabs: ")] 
-        public Texture2D _inputImage;
+        [Header("Prefabs: ")] public Texture2D _inputImage;
         public Image originalImagePrefab;
         public Image originalShadowImagePrefab;
         public Tile tilePrefab;
         public TileGroup tileGroupPrefab;
         public Transform tileShadowPrefab;
 
-        [Header("Settings: ")]
-        public Vector2Int _tileCount;
+        [Header("Settings: ")] public Vector2Int _tileCount;
         [Range(0.0f, 1.0f)] [SerializeField] public float combiningChance;
         [Range(0, 4)] [SerializeField] public int numberOfTilesToCombine;
 
-        [Header("Output Lists: ")] 
-        public List<Tile> tiles;
+        [Header("Output Lists: ")] public List<Tile> tiles;
         public List<TileSlot> tileShadows;
         public List<TileGroup> tileGroups;
-        
-        [HideInInspector] public Vector2 TileDimensions;
-        public Image OriginalImageInstance => _originalImageInstance;
-        private Image _originalImageInstance;
-        
-        public RectTransform OriginalImageRectTransform => originalImageRectTransform;
-        private RectTransform originalImageRectTransform;
 
-        
+        [HideInInspector] public Vector2 TileDimensions;
+        private Image _originalImageInstance;
+        private RectTransform _originalImageRectTransform;
+
+
         private bool _isPuzzleGenerated;
         private GameObject _puzzleContainer;
 
-        
+
         #region Puzzle Generation
 
         public void GenerateNewPuzzle(Texture2D newInputImage = null) {
@@ -53,7 +46,7 @@ namespace PuzzleSystem {
             StartPuzzleGeneration();
             _isPuzzleGenerated = true;
         }
-        
+
 
         private void StartPuzzleGeneration() {
             if (CannotSplitImage()) return;
@@ -65,7 +58,7 @@ namespace PuzzleSystem {
             GenerateTileGroups();
             CanvasController.Instance.UpdateContentSpacing();
         }
-        
+
         private void InstantiateOriginalImage() {
             var imageSprite = Sprite.Create(_inputImage, _inputImage.Rect(), Vector2.one * 0.5f);
             _originalImageInstance = Instantiate(originalImagePrefab, transform);
@@ -75,11 +68,10 @@ namespace PuzzleSystem {
             var color = _originalImageInstance.color;
             color.a = 0.2f;
             _originalImageInstance.color = color;
-            originalImageRectTransform = _originalImageInstance.rectTransform;
-            originalImageRectTransform.MatchOther(transform.parent.GetComponent<RectTransform>());
-            
+            _originalImageRectTransform = _originalImageInstance.rectTransform;
+            _originalImageRectTransform.MatchOther(transform.parent.GetComponent<RectTransform>());
         }
-        
+
         private void SetUpTileNeighbours() {
             foreach (var tile in tiles) tile.SetUpNeighbours();
         }
@@ -88,7 +80,7 @@ namespace PuzzleSystem {
             foreach (var tile in tiles) tile.CombineTileWithRandomNeighbors();
             tilesContainer.ShuffleChildren();
         }
-        
+
         private void GeneratePuzzle() {
             PuzzleGenerator.Instance.GeneratePuzzle(this);
         }
@@ -110,7 +102,9 @@ namespace PuzzleSystem {
 
         public int TileCoordinates2Index(int x, int y) => x * _tileCount.y + y;
         public int TileCoordinates2Index(Vector2Int coordinates) => coordinates.x * _tileCount.y + coordinates.y;
-        public Vector2Int TileIndex2Coordinates(int index) => new Vector2Int(index / _tileCount.y, index % _tileCount.y);
+
+        public Vector2Int TileIndex2Coordinates(int index) =>
+            new Vector2Int(index / _tileCount.y, index % _tileCount.y);
 
         private bool CannotSplitImage() {
             if (_inputImage == null) {
@@ -168,30 +162,38 @@ namespace PuzzleSystem {
 // #endif
 
         #endregion
-        
-        
-        
+
+        public void SavePuzzle() {
+        }
+
+        public void Unload() {
+            ClearTiles();
+        }
+
         public void ClearTiles() {
             _isPuzzleGenerated = false;
             tiles.Clear();
-            tileGroups.Clear();
             tileShadows.Clear();
 
+            foreach (var element in tileGroups) {
+                if (element != null) DestroyImmediate(element.gameObject);
+            }
+            tileGroups.Clear();
+
+
             if (_originalImageInstance != null) DestroyImmediate(_originalImageInstance.gameObject);
-            
+
             var children = new List<GameObject>();
             children.AddRange(gameObject.gameObject.GetDirectChildren());
             children.AddRange(tilesContainer.gameObject.GetDirectChildren());
-            
+
             foreach (var child in children) {
                 DestroyImmediate(child.gameObject);
             }
-            
+
             PuzzleGenerator.Instance.Clear();
-            
         }
-        
+
         public int GetTileCount() => tiles.Count;
-        
     }
 }

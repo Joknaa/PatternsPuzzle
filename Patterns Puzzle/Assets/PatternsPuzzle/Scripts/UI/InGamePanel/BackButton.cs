@@ -10,6 +10,7 @@ namespace UI {
         }
 
         private void OnBackButtonClicked() {
+            PuzzleController.Instance.CurrentPuzzle.Unload();
             GameStateController.Instance.CurrentGameState = GameState.PuzzleSelectionPanel;
         }
     }
