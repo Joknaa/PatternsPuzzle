@@ -17,6 +17,8 @@ namespace PuzzleSystem {
 
         public Puzzle Puzzle => _puzzle;
         private Puzzle _puzzle;
+        
+        public Vector2Int Coordinates => new Vector2Int(x, y);
 
 
         public bool IsMatched { get; private set; } = false;
@@ -30,8 +32,8 @@ namespace PuzzleSystem {
         private Image spriteRenderer;
         private float _combiningChance;
         private int _numberOfTilesToCombineWith = 0;
-        private int X;
-        private int Y;
+        private int x;
+        private int y;
         private bool isTaken;
 
 
@@ -47,11 +49,11 @@ namespace PuzzleSystem {
 
         public void Init(Puzzle puzzle, Vector2Int coord, Sprite sprite) {
             _puzzle = puzzle;
-            X = coord.x;
-            Y = coord.y;
+            x = coord.x;
+            y = coord.y;
             _combiningChance = _puzzle.combiningChance;
             _numberOfTilesToCombineWith = _puzzle.numberOfTilesToCombine;
-            gameObject.name = $"Tile {X} {Y}";
+            gameObject.name = $"Tile {x} {y}";
             isTaken = false;
 
             if (spriteRenderer == null) spriteRenderer = GetComponent<Image>();
@@ -62,10 +64,10 @@ namespace PuzzleSystem {
 
 
         public void SetUpNeighbours() {
-            if (_puzzle.GetTileByIndex(X, Y + 1, out var tileAbove)) neighbouringTiles.Add(tileAbove);
-            if (_puzzle.GetTileByIndex(X, Y - 1, out var tileBelow)) neighbouringTiles.Add(tileBelow);
-            if (_puzzle.GetTileByIndex(X - 1, Y, out var tileLeft)) neighbouringTiles.Add(tileLeft);
-            if (_puzzle.GetTileByIndex(X + 1, Y, out var tileRight)) neighbouringTiles.Add(tileRight);
+            if (_puzzle.GetTileByIndex(x, y + 1, out var tileAbove)) neighbouringTiles.Add(tileAbove);
+            if (_puzzle.GetTileByIndex(x, y - 1, out var tileBelow)) neighbouringTiles.Add(tileBelow);
+            if (_puzzle.GetTileByIndex(x - 1, y, out var tileLeft)) neighbouringTiles.Add(tileLeft);
+            if (_puzzle.GetTileByIndex(x + 1, y, out var tileRight)) neighbouringTiles.Add(tileRight);
         }
 
         public void CombineTileWithRandomNeighbors() {
@@ -98,13 +100,16 @@ namespace PuzzleSystem {
 
             tileGroupRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _puzzle.TileDimensions.x);
             tileGroupRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _puzzle.TileDimensions.y);
-            tileGroup.Init(tilesToCombine, _puzzle, this);
-
             tileGroupRectTransform.localPosition = transform.localPosition;
 
+            TileGroupNeighbors tileGroupNeighbors = new TileGroupNeighbors();
             foreach (var tile in tilesToCombine) {
+                var direction = tile.transform.localPosition - transform.localPosition;
+                tileGroupNeighbors.AddNeighbor(this, tile);
                 tile.HandleTileGrouping(tileGroup);
             }
+
+            tileGroup.Init(tilesToCombine, _puzzle, this, tileGroupNeighbors);
 
             tileGroup.transform.SetParent(_puzzle.tilesContainer);
             _puzzle.tileGroups.Add(tileGroup);
@@ -135,6 +140,7 @@ namespace PuzzleSystem {
             tileGroupParent.transform.SetParent(_puzzle.transform);
             tileGroupParent.transform.position = slot.transform.position;
             OnTilePlacedInCorrectSlot?.Invoke(tileGroupParent.TilesValue);
+            IsMatched = true;
         }
         
         

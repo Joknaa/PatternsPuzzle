@@ -18,6 +18,7 @@ namespace PuzzleSystem {
 
         private void OnPuzzleClick() {
             GameStateController.Instance.CurrentGameState = GameState.Playing;
+            ProgressController.Instance.Reset();
             PuzzleController.Instance.GenerateNewPuzzle(puzzleName, _puzzleOriginalImage);
             SaveController.Instance.LoadPuzzle(PuzzleController.Instance.CurrentPuzzle);
         }
